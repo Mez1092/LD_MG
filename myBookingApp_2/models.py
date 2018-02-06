@@ -58,3 +58,7 @@ class Voto(models.Model):
 
     def __str__(self):
         return self.hotel_id.nome
+
+
+
+#PovaGit
