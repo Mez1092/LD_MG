@@ -47,8 +47,8 @@ class Stanza(models.Model):
 class Prenotazioni(models.Model):
     id_stanza = models.ForeignKey(Stanza)
     id_user = models.ForeignKey(User)
-    check_in = models.DateField('check_in')
-    check_out = models.DateField('check_out')
+    check_in = models.DateTimeField('check_in')
+    check_out = models.DateTimeField('check_out')
 
 
 class Voto(models.Model):
