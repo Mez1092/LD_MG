@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+
+
+<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
+
+{#<header>#}
+{#    <div style="color: #eee; margin: auto; width: 100%; background: rgba(30, 30, 30, 0.7); padding-top: 5px; padding-bottom: 5px;">#}
+{#        <ul>#}
+{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/search">Location list</a></li>#}
+{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/vote">My Vote</a></li>#}
+{#        </ul>#}
+{#        <ur>#}
+{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/">Home</a></li>#}
+{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/creahotel"> Add Location</a></li>#}
+{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/creastanza"> Add Room</a></li>#}
+{#        </ur>#}
+{##}
+{#        <h1>User: {{ user.username }}</h1>#}
+{#    </div>#}
+{#</header>#}
+
+<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
+
+{% block content %}
+     <table style="width:100%">
+        {% for p in prenotazioni %}
+            <p> 
+                <tr>
+                    <td>
+                        <div class="prenotations">
+                            <p><h2>stanza: {{p.id_stanza}}</h2></p>
+                            <p><h2>Location: {{p.id_stanza.id_hotel}}</h2></p>
+                            <p><h2>User prenotation: {{p.id_user}}</h2></p>
+                            <p><h2>check_in: {{p.check_in}}</h2></p>
+                            <p><h2>check_out: {{p.check_out}}</h2></p>
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+            </p>
+        {% endfor %}
+    </table>
+
+
+{% endblock %}
+
+<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
+{#<aside>#}
+{#    <table style="width:100%">#}
+{#        {% for p in RoomFavorite %}#}
+{#            <p> #}
+{#                <tr>#}
+{#                    <td>#}
+{#                        <div class="favorites">#}
+{#                            <p><h2>Location: {{p.room_favorite.id_location.name}}</h2></p>#}
+{#                            {{ p.room_favorite.id_location.description }}#}
+{#                            <hr>#}
+{#                            <p>Room number: {{p.room_favorite.number_room}}</p>#}
+{#                            <hr>#}
+{#                            <p><h4>Location position:</h4></p>#}
+{#                            <p>{{ p.room_favorite.id_location.address }} - {{ p.room_favorite.id_location.municipality }} - {{ p.room_favorite.id_location.city }} - {{ p.room_favorite.id_location.country }}</p>#}
+{#                            <p><a href="{{p.room_favorite.id_location.site_web}}">Site web {{p.room_favorite.id_location.name}}</a></p>#}
+{#                            <form action="/TravelBook/" method="POST">#}
+{#                                {% csrf_token %}#}
+{#                                <input type="Submit" name="SubmitDeleteFavorite" value="Delete from favorites" onclick=DeleteFavoriteEvent()>#}
+{#                                <input type="hidden" name="FavoriteId" value={{p.id}}>#}
+{#                            </form>#}
+{#                        </div>#}
+{#                    </td>#}
+{#                </tr>#}
+{#            </p>#}
+{#        {% endfor %}#}
+{#    </table>#}
+{#</aside>#}
+<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
+<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
+{#<maction>#}
+{#    <table style="width:100%">#}
+{#        {% for p in RoomWaitingList %}#}
+{#            <p> #}
+{#                <tr>#}
+{#                    <td>#}
+{#                        <div class="waiting_list">#}
+{#                            <p><h2>Location: {{p.room_waiting_list.id_location.name}}</h2></p>#}
+{#                            {{ p.room_waiting_list.id_location.description }}#}
+{#                            <hr>#}
+{#                            <p>Room number: {{p.room_waiting_list.number_room}}</p>#}
+{#                            <hr>#}
+{#                            <p>User booked: {{ p.user_reservetion }}</p>#}
+{#                            <p>User attend: {{ p.user_waiting_list }}</p>#}
+{#                            <hr>#}
+{#                            <p><h4>Location position:</h4></p>#}
+{#                            <p>{{ p.room_waiting_list.id_location.address }} - {{ p.room_waiting_list.id_location.municipality }} - {{ p.room_waiting_list.id_location.city }} - {{ p.room_waiting_list.id_location.country }}</p>#}
+{#                            <p><a href="{{p.room_waiting_list.id_location.site_web}}">Site web {{p.room_waiting_list.id_location.name}}</a></p>#}
+{#                            <form action="/TravelBook/" method="POST">#}
+{#                                {% csrf_token %}#}
+{#                                <input type="Submit" name="SubmitDeleteWaitingList" value="Delete from waiting list" onclick=DeleteWaitingList()>#}
+{#                                <input type="hidden" name="WaitingListId" value={{p.id}}>#}
+{#                            </form>#}
+{#                        </div>#}
+{#                    </td>#}
+{#                </tr>#}
+{#            </p>#}
+{#        {% endfor %}#}
+{#    </table>#}
+{#</maction>#}
+<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
+<footer>
+    <em>scisoacsacoakocak</em>
+</footer>
+<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
+</body>
+</html>

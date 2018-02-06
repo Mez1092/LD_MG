@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+    {% if stanze %}
+    <ul>
+        {% for stanza in stanze %}
+            <li>
+                <a href="/hotel/{{ hotel.nome }}/">{{ stanza.num_camera }}- {{ stanza.id_hotel }} - {{ stanza.aria_condizionata  }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No hotels are available.</p>
+    {% endif %}
+
+<table style="width:100%">
+{% if hotels %}
+        {% for l in hotels %}
+                <tr>
+                    <td>
+                        <div class="hotels">
+                            <h2>{{l.nome}}</h2>  
+                            <p>{{l.nome}} {{l.descrizione}}
+                            <hr>
+                            <p> {{l.indirizzo}} -
+                                {{l.città}} -
+                                {{l.stato}} -
+                                {{l.telefono}}.
+                            </p>
+                            <p><a href="{{l.sito}}">{{l.sito}}</a></p>
+
+                            <p><h4>Features:</h4>
+                            <ul style="list-style-type:circle">
+                            <li>{% if l.piscina == True %} &#x221A {% else %} &#9747 {% endif %} Pool</li>
+                            <li>{% if l.WiFi == True %} &#x221A {% else %} &#9747 {% endif %} WiFi</li>
+                            <li>{% if l.accesso_disabili == True %} &#x221A {% else %} &#9747 {% endif %} Disabled services</li>
+                            <li>{% if l.ristorante == True %} &#x221A {% else %} &#9747 {% endif %} Resturant</li>
+                            <li>{% if l.parcheggio == True %} &#x221A {% else %} &#9747 {% endif %} Car parking</li>
+                            <li>{% if l.palestra == True %} &#x221A {% else %} &#9747 {% endif %} Gym</li>
+                            <li>{% if l.bar == True %} &#x221A {% else %} &#9747 {% endif %} Bar</li>
+                            <li>{% if l.spa == True %} &#x221A {% else %} &#9747 {% endif %} S.P.A</li>
+                            </ul>
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+{% endif %}
+</table>
+</body>
+
+</html>

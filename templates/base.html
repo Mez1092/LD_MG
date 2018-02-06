@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+        <title> {% block title %}Search result{% endblock %} </title>
+        <style>
+            ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                background-color: #333;
+            }
+
+            li {
+                float: left;
+            }
+
+            li a {
+                display: block;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+
+            li a:hover:not(.active) {
+                background-color: #111;
+            }
+
+            .active {
+                background-color: #4CAF50;
+            }
+            </style>
+    </head>
+
+    <header>
+        <div style="color: #eee; margin: auto; width: 100%; background: blue; padding-top: 5px; padding-bottom: 5px;">
+            <ul>
+
+                <li>
+                    {% if user.is_authenticated %}
+                        <li><a href="http://127.0.0.1:8000/myBookingApp_2/logout">Logout</a></li>
+                        <a href="http://127.0.0.1:8000/myBookingApp_2/userpage">
+                        <li>{{ user.username }}</a></li>
+                    {% else %}
+                        <li><a href="http://127.0.0.1:8000/myBookingApp_2/login">Login</a> </li>
+                        <li><a>Anonymous</a></li>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <body>
+        <div class="w3-container" id="content" style="background-color: red">
+            {% block content %}{% endblock %}
+        </div>
+    </body>
+
+    <footer>
+        <div class="w3-container" id="footer" style="background-color: aqua">
+            {% block footer %}{% endblock %}
+        </div>
+    </footer>
+</html>

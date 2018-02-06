@@ -1,0 +1,117 @@
+{% extends "base2.html" %}
+
+{% block title %}Booking {% endblock %}
+
+{% block content %}
+    <div class="col-sm-4 well" align="left" style="background-color: #66ccff;padding: 10px" >
+        <form action="." method="POST">
+            {% csrf_token %}
+                {{form_search.as_p }}
+            <input type="Submit" name="Submit" value="Cerca">
+        </form>
+    </div>
+
+    <div class="col-sm-8" style="background-color:white;">
+        {% if risultati_hotel %}
+            {% for ris_hotel in risultati_hotel %}
+                <tr>
+                    <td>
+                        <div class="locations">
+                            <h2 style="color: red;">{{ris_hotel.nome}}</h2>  
+                            <p>Descrizione: {{ris_hotel.descrizione}}
+                            <hr>
+                            <p> {{ris_hotel.indirizzo}} -
+                                {{ris_hotel.citta}} -
+                                {{ris_hotel.stato}} -
+                                {{ris_hotel.telefono}}.
+                            </p>
+                            <hr>
+                            <p><a href="{{ris_hotel.sito}}">Site web</a></p>
+                            <hr>
+                            <p><h4>Features:</h4>
+                            <ul style="list-style-type: none">
+                            <li>{% if ris_hotel.piscina == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Piscina </li>
+                            <li>{% if ris_hotel.WiFi == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} WiFi</li>
+                            <li>{% if ris_hotel.accesso_disabili == True %} <span class="glyphicon glyphicon-ok"></span>{% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Accesso disabili</li>
+                            <li>{% if ris_hotel.ristorante == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Ristorante</li>
+                            <li>{% if ris_hotel.parcheggio == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Parcheggio</li>
+                            <li>{% if ris_hotel.palestra == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Palestra</li>
+                            <li>{% if ris_hotel.bar == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Bar</li>
+                            <li>{% if ris_hotel.spa == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} S.P.A</li>
+                            </ul>
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+
+{#                {% if stanze_filtrate %}#}
+                    {% for r in stanze_filtrate %}
+                        {% if ris_hotel.id == r.id_hotel.id %}
+                           {% if r.id in id_prenotate %}
+                               {% for p in stanze_prenotate %}
+                                   {% if p.id_stanza_id == r.id %}
+                                       {% if p.check_in|date:"Y-m-d" > data.1 or p.check_out|date:"Y-m-d" < data.0  %}
+                                            <div class="well" style="background-color: yellow">
+                                            <h3 style="color: lime;">Stanza numero {{r.num_camera}} per {{r.num_persone}} persone</h3>
+                                            <hr>
+                                            <p>
+                                                Prezzo stanza: {{ r.prezzo }}<br>
+                                                Giorni alloggio: {{ data.2 }}<br>
+                                                <b>Totale: {{ data.2|moltiplicazione:r.prezzo }}</b><br><hr>
+                                                <p><h4>Features:</h4>
+                                                <ul style="list-style-type:none">
+                                                    <li>{% if r.aria_condizionata == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Aria Condizionata</li>
+                                                    <li>{% if r.fumatori == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Stanza fumatori</li>
+                                                    <li>{% if r.animali == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Animali</li>
+                                                </ul>
+                                                </p>
+                                            </p>
+                                            </div>
+                                       {% else %}
+                                            <div class="well" style="background-color: red">
+                                            <h3 style="color: lime;">Stanza numero {{r.num_camera}} per {{r.num_persone}} persone</h3>
+                                            <hr>
+                                            <p>
+                                                Prezzo stanza: {{ r.prezzo }}<br>
+                                                Giorni alloggio: {{ data.2 }}<br>
+                                                <b>Totale: {{ data.2|moltiplicazione:r.prezzo }}</b><br><hr>
+                                                <p><h4>Features:</h4>
+                                                <ul style="list-style-type:none">
+                                                    <li>{% if r.aria_condizionata == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Aria Condizionata</li>
+                                                    <li>{% if r.fumatori == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Stanza fumatori</li>
+                                                    <li>{% if r.animali == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Animali</li>
+                                                </ul>
+                                                </p>
+                                            </p>
+                                            </div>
+                                       {% endif %}
+                                   {% endif %}
+                               {% endfor %}
+                           {% else %}
+                               <div class="well" style="background-color: green">
+                               <h3 style="color: lime;">Stanza numero {{r.num_camera}} per {{r.num_persone}} persone</h3>
+                               <hr>
+                               <p>
+                                   Prezzo stanza: {{ r.prezzo }}<br>
+                                   Giorni alloggio: {{ data.2 }}<br>
+                                   <b>Totale: {{ data.2|moltiplicazione:r.prezzo }}</b><br><hr>
+                               <p><h4>Features:</h4>
+                               <ul style="list-style-type:none">
+                               <li>{% if r.aria_condizionata == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Aria Condizionata</li>
+                               <li>{% if r.fumatori == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Stanza fumatori</li>
+                               <li>{% if r.animali == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Animali</li>
+                               </ul>
+                               </p>
+                               </p>
+                               </div>
+                           {% endif %}
+                        {% endif %}
+                    {% endfor %}
+{#                {% endif %}#}
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}
+{% block footer %}
+    <p> test footer </p>
+{% endblock %}

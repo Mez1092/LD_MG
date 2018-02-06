@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Creazione stanza  {% endblock %}
+
+{% block content %}
+    <div class="Container" align="left" style="background-color: #4cfe2d;padding: 10px">
+        <form action="." method="POST">
+            {% csrf_token %}
+            {% for i in form_aggiungi_stanza %}
+                <label for="email">{{ i.name}}</label>
+                {{ i}}
+                <br>
+            {% endfor %}
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+{#            {{ form_aggiungi_stanza.as_p }}#}
+            <input type="Submit" name="Submit" value="Aggiungi">
+        </form>
+    </div>
+{% endblock %}
