@@ -11,5 +11,7 @@ urlpatterns = [
     url(r'^creazioneavvenuta/', views.successocreazione, name='creazioneavvenuta'),
     url(r'^logout/$', views.logout_view, name='logout'),
     url(r'^login/',views.login_test,name='login'),
-    url(r'^userpage/',views.userpage,name='user')
+    url(r'^userpage/',views.userpage,name='user'),
+	url(r'^registrazioneutente/',views.register_user,name='registrazioneutente'),
+    url(r'^registrazionegestore/',views.register_gestore,name='registrazionegestore')
 ]

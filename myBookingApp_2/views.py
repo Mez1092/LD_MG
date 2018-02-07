@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Permission
 from django.db.models.functions import datetime
 from django.contrib import messages
 from django.db import IntegrityError
@@ -237,11 +238,32 @@ def register_user(request):
             password =form.cleaned_data['password1'],
             email =form.cleaned_data['email']
             )
-            return HttpResponseRedirect('/TravelBook/register_success')
+            # AGGIUNGERE NOME DEL GRUPPO DEI PERMESSI UTENTE
+            # permission = Permission.objects.get(name='Can add hotel')
+            # user.user_permissions.add(permission)
+
+            return HttpResponseRedirect('registrazione_avvenuta.html')
     else:
         form = RegistrationForm()
-    variables = RequestContext(request, {'form': form})
-    return render_to_response('registration/register.html',variables,)
+    return render(request, 'register.html', {'form': form})
+
+def register_gestore(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = User.objects.create_user(
+            username =form.cleaned_data['username'],
+            password =form.cleaned_data['password1'],
+            email =form.cleaned_data['email']
+            )
+            # INSERIRE IL NOME DEL GRUPPO COI PERMESSI DEL GESTORE
+            # permission = Permission.objects.get(name='Can add hotel')
+            # user.user_permissions.add(permission)
+
+            return HttpResponseRedirect('registrazione_avvenuta.html')
+    else:
+        form = RegistrationForm()
+    return render(request, 'register.html', {'form': form})
 
 def login_test(request):
     if request.method == 'POST':
