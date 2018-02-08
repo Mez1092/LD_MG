@@ -6,8 +6,9 @@ import datetime
 
 class SearchHotelForm(forms.Form):
     citta = forms.CharField(widget=forms.TextInput,required=False)
-    check_in = forms.DateField(widget=forms.widgets.SelectDateWidget)
-    check_out = forms.DateField(initial=datetime.date.today() + datetime.timedelta(days=1))
+    check_in = forms.DateField(widget=forms.widgets.SelectDateWidget, initial=datetime.date.today())
+    print("check in: ",check_in)
+    check_out = forms.DateField(widget=forms.widgets.SelectDateWidget, initial=datetime.date.today()+ datetime.timedelta(days=1))
     piscina = forms.BooleanField(initial=False, required=False)
     WiFi = forms.BooleanField(initial=False, required=False)
     accesso_disabili = forms.BooleanField(initial=False, required=False)
