@@ -81,3 +81,7 @@ class LoginForm(forms.Form):
     class Meta:
         model = User
         fields = ('username', 'password' )
+
+
+
+#provo la PUSH
