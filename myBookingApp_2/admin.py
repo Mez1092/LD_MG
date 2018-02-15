@@ -33,8 +33,18 @@ class VotoAdmin(admin.ModelAdmin):
     list_display = ('hotel_id', 'user_id', 'voto')
 
 
+class StanzaPreferitaAdmin(admin.ModelAdmin):
+    fields = ['stanza_preferita', 'user_id']
+    list_display = ('stanza_preferita', 'user_id')
+
+
+class ListaAttesaAdmin(admin.ModelAdmin):
+    fields = ['lista_attesa','user_id','user_prenotazione','check_in_lista_attesa','check_out_lista_attesa']
+    list_display = ('lista_attesa','user_id','user_prenotazione')
 
 admin.site.register(Hotel, HotelAdmin)
 admin.site.register(Stanza, StanzaAdmin)
 admin.site.register(Prenotazioni,PrenotazioniAdmin)
 admin.site.register(Voto,VotoAdmin)
+admin.site.register(Stanzapreferita,StanzaPreferitaAdmin)
+admin.site.register(ListaAttesaStanza,ListaAttesaAdmin)
