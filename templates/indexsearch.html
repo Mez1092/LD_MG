@@ -57,7 +57,7 @@
                                             <p>
                                                 Prezzo stanza: {{ r.prezzo }}<br>
                                                 Giorni alloggio: {{ data.2 }}<br>
-                                                <b>Totale: {{ data.2|moltiplicazione:r.prezzo }}</b><br><hr>
+{#                                                <b>Totale: {{ data.2|moltiplicazione:r.prezzo }}</b><br><hr>#}
                                                 <p><h4>Features:</h4>
                                                 <ul style="list-style-type:none">
                                                     <li>{% if r.aria_condizionata == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Aria Condizionata</li>
@@ -66,6 +66,19 @@
                                                 </ul>
                                                 </p>
                                             </p>
+
+                                            <form action="prenota" method="post">
+                                                {% csrf_token %}
+                                                    <input type="hidden" name="id" value={{r.id}}>
+                                                    <input type="hidden" name="data_arrive" value={{ data.0 }}>
+                                                    <input type="hidden" name="data_leave" value={{ data.1 }}>
+                                                {% if user.is_authenticated %}
+                                                    <input type="Submit" name="AggiungiPrenotazione" value="PrenotaLoggato" onclick="ReservationEvent()">
+                                                {% else %}
+                                                    <input type="Submit" name="Submit" value="Prenota" onclick="LoginEvent()">
+                                                {% endif %}
+                                            </form>
+
                                             </div>
                                        {% else %}
                                             <div class="well" style="background-color: red">
@@ -74,7 +87,7 @@
                                             <p>
                                                 Prezzo stanza: {{ r.prezzo }}<br>
                                                 Giorni alloggio: {{ data.2 }}<br>
-                                                <b>Totale: {{ data.2|moltiplicazione:r.prezzo }}</b><br><hr>
+{#                                                <b>Totale: {{ data.2|moltiplicazione:r.prezzo }}</b><br><hr>#}
                                                 <p><h4>Features:</h4>
                                                 <ul style="list-style-type:none">
                                                     <li>{% if r.aria_condizionata == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Aria Condizionata</li>
@@ -94,7 +107,7 @@
                                <p>
                                    Prezzo stanza: {{ r.prezzo }}<br>
                                    Giorni alloggio: {{ data.2 }}<br>
-                                   <b>Totale: {{ data.2|moltiplicazione:r.prezzo }}</b><br><hr>
+{#                                   <b>Totale: {{ data.2|moltiplicazione:r.prezzo }}</b><br><hr>#}
                                <p><h4>Features:</h4>
                                <ul style="list-style-type:none">
                                <li>{% if r.aria_condizionata == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Aria Condizionata</li>
@@ -103,6 +116,20 @@
                                </ul>
                                </p>
                                </p>
+
+                                <form action="/myBookingApp_2/prenota/" method="post">
+                                                {% csrf_token %}
+                                                    <input type="hidden" name="id" value={{r.id}}>
+                                                    <input type="hidden" name="data_arrive" value={{ data.0 }}>
+                                                    <input type="hidden" name="data_leave" value={{ data.1 }}>
+                                                {% if user.is_authenticated %}
+                                                    <input type="Submit" name="AggiungiPrenotazione" value="PrenotaLoggato" onclick="ReservationEvent()">
+                                                {% else %}
+                                                    <input type="Submit" name="Submit" value="Prenota" onclick="LoginEvent()">
+                                                {% endif %}
+                                            </form>
+
+
                                </div>
                            {% endif %}
                         {% endif %}

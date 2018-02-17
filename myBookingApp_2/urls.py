@@ -13,5 +13,7 @@ urlpatterns = [
     url(r'^login/',views.login_test,name='login'),
     url(r'^userpage/',views.userpage,name='user'),
 	url(r'^registrazioneutente/',views.register_user,name='registrazioneutente'),
+    url(r'^prenota/',views.AggiungiPrenotazione, name='aggiungiprenotazione'),
     url(r'^registrazionegestore/',views.register_gestore,name='registrazionegestore')
+
 ]

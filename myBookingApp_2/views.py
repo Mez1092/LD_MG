@@ -30,125 +30,136 @@ def userpage(request):
 
 
 def search(request):
-    hotels = Hotel.objects.all()
-    stanze = Stanza.objects.all()
-    prenotazioni = Prenotazioni.objects.all()
-    prenotazioni_totali = Prenotazioni.objects.all()
-    data = []
 
-    Filtered_hotels = None
-    Filtered_rooms = None
-    total_id_hotel = None
-    giorni_alloggio = 0
-    #contiene tutti gli id delle stanze prenotate
-    p = [p.id_stanza.id for p in prenotazioni]
+    # if 'AggiungiPrenotazione' in request.POST:
+    #     print("test")
+    # else:
+    #     print("test fallito")
+        hotels = Hotel.objects.all()
+        stanze = Stanza.objects.all()
+        stanze = stanze.order_by("prezzo")
+        prenotazioni = Prenotazioni.objects.all()
+        prenotazioni_totali = Prenotazioni.objects.all()
+        data = []
 
-
-    if request.method == 'POST':
-        print("sono nell'if")
-
-
-        form_search_hotel = SearchHotelForm(request.POST)
-        Filtered_hotels = hotels
-        Filtered_rooms = stanze
-
-        if form_search_hotel.is_valid():
-            # prendo in ingresso tutti i valori inseriti nel form
-            f_citta = form_search_hotel.cleaned_data['citta']
-            f_check_in = form_search_hotel.cleaned_data['check_in']
-            f_check_out= form_search_hotel.cleaned_data['check_out']
-            print("checkin: ", f_check_in)
-            print("checkout: " , f_check_out)
-            f_piscina = form_search_hotel.cleaned_data['piscina']
-            f_wifi = form_search_hotel.cleaned_data['WiFi']
-            f_accesso_disabili = form_search_hotel.cleaned_data['accesso_disabili']
-            f_ristorante = form_search_hotel.cleaned_data['ristorante']
-            f_parcheggio = form_search_hotel.cleaned_data['parcheggio']
-            f_palestra = form_search_hotel.cleaned_data['palestra']
-            f_bar = form_search_hotel.cleaned_data['bar']
-            f_spa = form_search_hotel.cleaned_data['spa']
-            f_num_persone = form_search_hotel.cleaned_data['num_persone']
-            f_aria_condizionata = form_search_hotel.cleaned_data['aria_condizionata']
-            f_camera_fumatori = form_search_hotel.cleaned_data['camera_fumatori']
-            f_animali = form_search_hotel.cleaned_data['animali']
-            print(f_citta)
-            # trasformo in stringa la data di checkin e checkout per calcolare il delta
-            date_format = "%Y-%m-%d"
-            check_in_string = f_check_in.strftime(date_format)
-            check_out_string = f_check_out.strftime(date_format)
+        Filtered_hotels = None
+        Filtered_rooms = None
+        total_id_hotel = None
+        giorni_alloggio = 0
+        #contiene tutti gli id delle stanze prenotate
+        p = [p.id_stanza.id for p in prenotazioni]
 
 
-            delta = f_check_out - f_check_in
-            print("Delta: ", delta.days)
-            data.append(check_in_string)
-            data.append(check_out_string)
-            data.append(delta.days)
-            print("Data: ", data)
-
-            Filtered_hotels = Filtered_hotels.filter(citta__icontains=f_citta).all()
-
-            print("filtro per citta",Filtered_hotels)
-
-            # filtro solo gli elementi che hanno le caratteristiche inserite nel form
-            if f_piscina:
-                Filtered_hotels = Filtered_hotels.filter(piscina=True)
-            if f_wifi:
-                Filtered_hotels = Filtered_hotels.filter(WiFi=True)
-            if f_accesso_disabili:
-                Filtered_hotels = Filtered_hotels.filter(accesso_disabili=True)
-            if f_ristorante:
-                Filtered_hotels = Filtered_hotels.filter(ristorante=True)
-            if f_parcheggio:
-                Filtered_hotels = Filtered_hotels.filter(parcheggio=True)
-            if f_palestra:
-                Filtered_hotels = Filtered_hotels.filter(palestra=True)
-            if f_bar:
-                Filtered_hotels = Filtered_hotels.filter(bar=True)
-            if f_spa:
-                Filtered_hotels = Filtered_hotels.filter(spa=True)
-            if (f_num_persone > 0):
-                Filtered_rooms = Filtered_rooms.filter(num_persone__gte=f_num_persone)
-            if f_aria_condizionata:
-                Filtered_rooms = Filtered_rooms.filter(aria_condizionata=True)
-            if f_camera_fumatori:
-                Filtered_rooms = Filtered_rooms.filter(camera_fumatori=True)
-            if f_animali:
-                Filtered_rooms = Filtered_rooms.filter(animali=True)
-
-            total_id_hotel = [h.id_hotel for h in Filtered_rooms]
-            risultati_stanze = Filtered_rooms
-
-            print("total id ",total_id_hotel)
-
-    else:
-        print("sono nell'else")
-        # se sono in una get faccio vedere il form vuoto
-        form_search_hotel = SearchHotelForm()
-        return render(request, 'indexsearch.html', {'form_search' : form_search_hotel})
-    risultati_stanze = Filtered_rooms
-    print("total id ", Filtered_rooms)
-
-    # tengo solo gli hotel filtrati che possiedono delle stanze:    DA RIVEDERE PER TROVARE QUALCOSA DI MEGLIO
-    # if total_id_hotel:
-    #     for h in Filtered_hotels:
-    #         count = 0
-    #         for e in total_id_hotel:
-    #             if h.id == e.id :
-    #                 count = count +1
-    #         if count == 0:
-    #             print(h.nome)
-    #             Filtered_hotels = Filtered_hotels.exclude(pk=h.pk)
-    # print("filtered hotel dopo ", Filtered_hotels)
-    #
-    #risultati_hotel = Filtered_hotels
+        if request.method == 'POST':
+            # print("sono nell'if")
 
 
-    return render(request, 'indexsearch.html', {'data': data, 'risultati_hotel': hotels , 'form_search' : form_search_hotel, 'stanze_filtrate': risultati_stanze, "stanze_prenotate" : prenotazioni, "id_prenotate": p })
+            form_search_hotel = SearchHotelForm(request.POST)
+            Filtered_hotels = hotels
+            Filtered_rooms = stanze
+
+            if form_search_hotel.is_valid():
+                # prendo in ingresso tutti i valori inseriti nel form
+                f_citta = form_search_hotel.cleaned_data['citta']
+                f_check_in = form_search_hotel.cleaned_data['check_in']
+                f_check_out= form_search_hotel.cleaned_data['check_out']
+                # print("checkin: ", f_check_in)
+                # print("checkout: " , f_check_out)
+                f_piscina = form_search_hotel.cleaned_data['piscina']
+                f_wifi = form_search_hotel.cleaned_data['WiFi']
+                f_accesso_disabili = form_search_hotel.cleaned_data['accesso_disabili']
+                f_ristorante = form_search_hotel.cleaned_data['ristorante']
+                f_parcheggio = form_search_hotel.cleaned_data['parcheggio']
+                f_palestra = form_search_hotel.cleaned_data['palestra']
+                f_bar = form_search_hotel.cleaned_data['bar']
+                f_spa = form_search_hotel.cleaned_data['spa']
+                f_num_persone = form_search_hotel.cleaned_data['num_persone']
+                f_aria_condizionata = form_search_hotel.cleaned_data['aria_condizionata']
+                f_camera_fumatori = form_search_hotel.cleaned_data['camera_fumatori']
+                f_animali = form_search_hotel.cleaned_data['animali']
+                print(f_citta)
+                # trasformo in stringa la data di checkin e checkout per calcolare il delta
+                date_format = "%Y-%m-%d"
+                check_in_string = f_check_in.strftime(date_format)
+                check_out_string = f_check_out.strftime(date_format)
+
+
+                delta = f_check_out - f_check_in
+                # print("Delta: ", delta.days)
+                data.append(check_in_string)
+                data.append(check_out_string)
+                data.append(delta.days)
+                # print("Data: ", data)
+
+                Filtered_hotels = Filtered_hotels.filter(citta__icontains=f_citta).all()
+
+                # print("filtro per citta",Filtered_hotels)
+
+                # filtro solo gli elementi che hanno le caratteristiche inserite nel form
+                if f_piscina:
+                    Filtered_hotels = Filtered_hotels.filter(piscina=True)
+                if f_wifi:
+                    Filtered_hotels = Filtered_hotels.filter(WiFi=True)
+                if f_accesso_disabili:
+                    Filtered_hotels = Filtered_hotels.filter(accesso_disabili=True)
+                if f_ristorante:
+                    Filtered_hotels = Filtered_hotels.filter(ristorante=True)
+                if f_parcheggio:
+                    Filtered_hotels = Filtered_hotels.filter(parcheggio=True)
+                if f_palestra:
+                    Filtered_hotels = Filtered_hotels.filter(palestra=True)
+                if f_bar:
+                    Filtered_hotels = Filtered_hotels.filter(bar=True)
+                if f_spa:
+                    Filtered_hotels = Filtered_hotels.filter(spa=True)
+                if (f_num_persone > 0):
+                    Filtered_rooms = Filtered_rooms.filter(num_persone__gte=f_num_persone)
+                if f_aria_condizionata:
+                    Filtered_rooms = Filtered_rooms.filter(aria_condizionata=True)
+                if f_camera_fumatori:
+                    Filtered_rooms = Filtered_rooms.filter(camera_fumatori=True)
+                if f_animali:
+                    Filtered_rooms = Filtered_rooms.filter(animali=True)
+
+                total_id_hotel = [h.id_hotel for h in Filtered_rooms]
+                risultati_stanze = Filtered_rooms
+
+                # print("total id ",total_id_hotel)
+
+        else:
+            # print("sono nell'else")
+            # se sono in una get faccio vedere il form vuoto
+            form_search_hotel = SearchHotelForm()
+            return render(request, 'indexsearch.html', {'form_search' : form_search_hotel})
+
+
+
+
+        risultati_stanze = Filtered_rooms
+        # print("total id ", Filtered_rooms)
+
+        # tengo solo gli hotel filtrati che possiedono delle stanze:    DA RIVEDERE PER TROVARE QUALCOSA DI MEGLIO
+        # if total_id_hotel:
+        #     for h in Filtered_hotels:
+        #         count = 0
+        #         for e in total_id_hotel:
+        #             if h.id == e.id :
+        #                 count = count +1
+        #         if count == 0:
+        #             print(h.nome)
+        #             Filtered_hotels = Filtered_hotels.exclude(pk=h.pk)
+        # print("filtered hotel dopo ", Filtered_hotels)
+        #
+        #risultati_hotel = Filtered_hotels
+
+
+        return render(request, 'indexsearch.html', {'data': data, 'risultati_hotel': hotels , 'form_search' : form_search_hotel, 'stanze_filtrate': risultati_stanze, "stanze_prenotate" : prenotazioni, "id_prenotate": p })
 
 # filtro da usare nel template per il calcolo del prezzo totale per il soggiorno
-@register.filter(name='moltiplicazione')
-def moltiplicazione(value, arg):
-    return value*arg
+# @register.filter(name='moltiplicazione')
+# def moltiplicazione(value, arg):
+#     print("value: "+" arg: ", value, arg)
+#     return value*arg
 
 def creastanza(request):
     if request.method == 'POST':
@@ -287,3 +298,30 @@ def login_test(request):
     else:
         loginform = LoginForm()
         return render(request, 'login.html', {'form': loginform})
+
+
+
+def AggiungiPrenotazione(request):
+    print("sono qua")
+    room = Stanza.objects.all()
+    # hotel = Hotel.objects.all()
+    # prenotation = Prenotazioni.objects.all()
+    new_idStanzaPrenotation = int(request.POST['id'])
+    new_userPrenotation = request.user.id
+    date_arrive = request.POST['data_arrive']
+    date_leave = request.POST['data_leave']
+
+
+
+    # for u in User.objects.all():
+    #     if u.id == new_userPrenotation:
+    #         c = get_object_or_404(User, pk=u.id)
+    #
+    # for r in room:
+    #     if r.pk == new_idStanzaPrenotation:
+    obj = Prenotazioni.objects.get_or_create(id_stanza=get_object_or_404(Stanza,pk=new_idStanzaPrenotation), id_user=get_object_or_404(User,pk=new_userPrenotation), check_in=date_arrive, check_out=date_leave)
+
+    # return render(request, 'indexsearch.html', {'hotel': hotel, 'stanza': room, 'prenotation': prenotation})
+    form_search_hotel = SearchHotelForm()
+    return HttpResponseRedirect('/myBookingApp_2/search', {'form_search': form_search_hotel})
+
