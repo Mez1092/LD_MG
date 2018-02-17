@@ -1,4 +1,4 @@
-from django.contrib.auth.models import Permission
+from django.contrib.auth.models import Permission, Group
 from django.db.models.functions import datetime
 from django.contrib import messages
 from django.db import IntegrityError
@@ -219,9 +219,9 @@ def creahotel(request):
 def successocreazione(request):
     return render_to_response('esitopositivocreazione.html')
 
-@login_required
-def login_test(request):
-    return HttpResponseRedirect('/myBookingApp_2/search/')
+# @login_required
+# def login_test(request):
+#     return HttpResponseRedirect('/myBookingApp_2/search/')
 
 
 def logout_view(request):
@@ -238,16 +238,16 @@ def register_user(request):
             password =form.cleaned_data['password1'],
             email =form.cleaned_data['email']
             )
-            # AGGIUNGERE NOME DEL GRUPPO DEI PERMESSI UTENTE
-            # permission = Permission.objects.get(name='Can add hotel')
-            # user.user_permissions.add(permission)
+            group = Group.objects.get(name='Utente')
+            user.groups.add(group)
 
-            return HttpResponseRedirect('registrazione_avvenuta.html')
+            return HttpResponseRedirect('esitopositivocreazione.html')
     else:
         form = RegistrationForm()
     return render(request, 'register.html', {'form': form})
 
 def register_gestore(request):
+
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
@@ -256,10 +256,8 @@ def register_gestore(request):
             password =form.cleaned_data['password1'],
             email =form.cleaned_data['email']
             )
-            # INSERIRE IL NOME DEL GRUPPO COI PERMESSI DEL GESTORE
-            # permission = Permission.objects.get(name='Can add hotel')
-            # user.user_permissions.add(permission)
-
+            group = Group.objects.get(name = 'Direzione')
+            user.groups.add(group)
             return HttpResponseRedirect('registrazione_avvenuta.html')
     else:
         form = RegistrationForm()
