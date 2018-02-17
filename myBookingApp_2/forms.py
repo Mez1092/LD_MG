@@ -7,7 +7,6 @@ import datetime
 class SearchHotelForm(forms.Form):
     citta = forms.CharField(widget=forms.TextInput,required=False)
     check_in = forms.DateField(widget=forms.widgets.SelectDateWidget, initial=datetime.date.today())
-    print("check in: ",check_in)
     check_out = forms.DateField(widget=forms.widgets.SelectDateWidget, initial=datetime.date.today()+ datetime.timedelta(days=1))
     piscina = forms.BooleanField(initial=False, required=False)
     WiFi = forms.BooleanField(initial=False, required=False)
@@ -17,7 +16,7 @@ class SearchHotelForm(forms.Form):
     palestra = forms.BooleanField(initial=False, required=False)
     bar = forms.BooleanField(initial=False, required=False)
     spa = forms.BooleanField(initial=False, required=False)
-    num_persone = forms.IntegerField(min_value=1)
+    num_persone = forms.IntegerField(initial=1, min_value=1)
     aria_condizionata = forms.BooleanField(initial=False, required=False)
     camera_fumatori = forms.BooleanField(initial=False, required=False)
     animali = forms.BooleanField(initial=False, required=False)
@@ -54,6 +53,21 @@ class AddVoto(forms.ModelForm):
     user_vote = forms.IntegerField(widget=forms.Select(choices=[(User.username) for User in User.objects.all()]),required=True)
     voto_value = forms.FloatField()
 
+
+
+class AddStanzaPreferita(forms.ModelForm):
+    stanza_preferita = forms.IntegerField(widget=forms.Select(choices=[(stanza.num_camera) for stanza in Stanza.objects.all()]),required=True)
+    user_id = forms.IntegerField(widget=forms.Select(choices=[(User.username) for User in User.objects.all()]),required=True)
+
+
+class AddToListaAttesa(forms.ModelForm):
+    lista_attesa = forms.IntegerField(widget=forms.Select(choices=[(stanza.num_camera) for stanza in Stanza.objects.all()]),required=True)
+    user_id = forms.IntegerField(widget=forms.Select(choices=[(User.username) for User in User.objects.all()]),required=True)
+    user_prenotazione = forms.IntegerField(widget=forms.Select(choices=[(prenotazioni.id_user) for prenotazioni in Prenotazioni.objects.all()]),required=True)
+    check_in = forms.DateField(widget=forms.widgets.SelectDateWidget, initial=datetime.date.today())
+    check_out = forms.DateField(widget=forms.widgets.SelectDateWidget, initial=datetime.date.today() + datetime.timedelta(days=1))
+
+
 class RegistrationForm(forms.Form):
 
     username = forms.RegexField(regex=r'^\w+$', widget=forms.TextInput(attrs=dict(required=True, max_length=30)), label=("Username"), error_messages={ 'invalid': ("This value must contain only letters, numbers and underscores.") })
@@ -81,7 +95,3 @@ class LoginForm(forms.Form):
     class Meta:
         model = User
         fields = ('username', 'password' )
-
-
-
-#provo la PUSH

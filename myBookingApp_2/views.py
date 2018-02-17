@@ -22,7 +22,11 @@ def index(request):
 def userpage(request):
     current_user = request.user
     prenotation = Prenotazioni.objects.filter(id_user=current_user)
-    return render(request, 'userpage.html', {"prenotazioni": prenotation})
+    preferite = Stanzapreferita.objects.filter(user_id=current_user)
+    lista_attesa = ListaAttesaStanza.objects.filter(user_id=current_user)
+
+
+    return render(request, 'userpage.html', {"prenotazioni": prenotation, "preferite": preferite, "lista_attesa": lista_attesa})
 
 
 def search(request):
