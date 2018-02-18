@@ -67,16 +67,16 @@
                                                 </p>
                                             </p>
 
-                                            <form action="prenota" method="post">
+                                            <form action="/myBookingApp_2/prenota/" method="post">
                                                 {% csrf_token %}
                                                     <input type="hidden" name="id" value={{r.id}}>
                                                     <input type="hidden" name="data_arrive" value={{ data.0 }}>
                                                     <input type="hidden" name="data_leave" value={{ data.1 }}>
-                                                {% if user.is_authenticated %}
+{#                                                {% if user.is_authenticated %}#}
                                                     <input type="Submit" name="AggiungiPrenotazione" value="PrenotaLoggato" onclick="ReservationEvent()">
-                                                {% else %}
-                                                    <input type="Submit" name="Submit" value="Prenota" onclick="LoginEvent()">
-                                                {% endif %}
+{#                                                {% else %}#}
+{#                                                    <input type="Submit" name="Submit" value="Prenota" onclick="LoginEvent()">#}
+{#                                                {% endif %}#}
                                             </form>
 
                                             </div>
@@ -122,11 +122,11 @@
                                                     <input type="hidden" name="id" value={{r.id}}>
                                                     <input type="hidden" name="data_arrive" value={{ data.0 }}>
                                                     <input type="hidden" name="data_leave" value={{ data.1 }}>
-                                                {% if user.is_authenticated %}
+{#                                                {% if user.is_authenticated %}#}
                                                     <input type="Submit" name="AggiungiPrenotazione" value="PrenotaLoggato" onclick="ReservationEvent()">
-                                                {% else %}
-                                                    <input type="Submit" name="Submit" value="Prenota" onclick="LoginEvent()">
-                                                {% endif %}
+{#                                                {% else %}#}
+{#                                                    <input type="Submit" name="Submit" value="Prenota" onclick="LoginEvent()">#}
+{#                                                {% endif %}#}
                                             </form>
 
 
@@ -140,5 +140,5 @@
     </div>
 {% endblock %}
 {% block footer %}
-    <p> test footer </p>
+    <p> test footer PROVA GIT </p>
 {% endblock %}
