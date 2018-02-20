@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404, render
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from .forms import *
-from time import time
+import datetime
 
 def index(request):
     hotels = Hotel.objects.all()
@@ -21,9 +21,9 @@ def index(request):
 
 def userpage(request):
     current_user = request.user
-    prenotation = Prenotazioni.objects.filter(id_user=current_user)
-    preferite = Stanzapreferita.objects.filter(user_id=current_user)
-    lista_attesa = ListaAttesaStanza.objects.filter(user_id=current_user)
+    prenotation = Prenotazioni.objects.all().filter(id_user=current_user)
+    preferite = Stanzapreferita.objects.all().filter(user_id=current_user)
+    lista_attesa = ListaAttesaStanza.objects.all().filter(user_id=current_user)
 
 
     return render(request, 'userpage.html', {"prenotazioni": prenotation, "preferite": preferite, "lista_attesa": lista_attesa})
@@ -31,10 +31,7 @@ def userpage(request):
 
 def search(request):
 
-    # if 'AggiungiPrenotazione' in request.POST:
-    #     print("test")
-    # else:
-    #     print("test fallito")
+
         hotels = Hotel.objects.all()
         stanze = Stanza.objects.all()
         stanze = stanze.order_by("prezzo")
@@ -46,12 +43,12 @@ def search(request):
         Filtered_rooms = None
         total_id_hotel = None
         giorni_alloggio = 0
+
         #contiene tutti gli id delle stanze prenotate
         p = [p.id_stanza.id for p in prenotazioni]
 
 
         if request.method == 'POST':
-            # print("sono nell'if")
 
 
             form_search_hotel = SearchHotelForm(request.POST)
@@ -63,8 +60,6 @@ def search(request):
                 f_citta = form_search_hotel.cleaned_data['citta']
                 f_check_in = form_search_hotel.cleaned_data['check_in']
                 f_check_out= form_search_hotel.cleaned_data['check_out']
-                # print("checkin: ", f_check_in)
-                # print("checkout: " , f_check_out)
                 f_piscina = form_search_hotel.cleaned_data['piscina']
                 f_wifi = form_search_hotel.cleaned_data['WiFi']
                 f_accesso_disabili = form_search_hotel.cleaned_data['accesso_disabili']
@@ -77,23 +72,17 @@ def search(request):
                 f_aria_condizionata = form_search_hotel.cleaned_data['aria_condizionata']
                 f_camera_fumatori = form_search_hotel.cleaned_data['camera_fumatori']
                 f_animali = form_search_hotel.cleaned_data['animali']
-                print(f_citta)
                 # trasformo in stringa la data di checkin e checkout per calcolare il delta
                 date_format = "%Y-%m-%d"
                 check_in_string = f_check_in.strftime(date_format)
                 check_out_string = f_check_out.strftime(date_format)
-
-
                 delta = f_check_out - f_check_in
-                # print("Delta: ", delta.days)
                 data.append(check_in_string)
                 data.append(check_out_string)
                 data.append(delta.days)
-                # print("Data: ", data)
 
                 Filtered_hotels = Filtered_hotels.filter(citta__icontains=f_citta).all()
-
-                # print("filtro per citta",Filtered_hotels)
+                # Filtered_hotels = Filtered_hotels.filter(citta=f_citta).all()
 
                 # filtro solo gli elementi che hanno le caratteristiche inserite nel form
                 if f_piscina:
@@ -123,19 +112,34 @@ def search(request):
 
                 total_id_hotel = [h.id_hotel for h in Filtered_rooms]
                 risultati_stanze = Filtered_rooms
+                f_id_stanze_filtrate = [room.id for room in Filtered_rooms]
 
-                # print("total id ",total_id_hotel)
 
         else:
-            # print("sono nell'else")
+
             # se sono in una get faccio vedere il form vuoto
             form_search_hotel = SearchHotelForm()
             return render(request, 'indexsearch.html', {'form_search' : form_search_hotel})
 
 
+        for stanza_prenotata in prenotazioni_totali:
+             cin = stanza_prenotata.check_in.strftime(date_format)
+             cout = stanza_prenotata.check_in.strftime(date_format)
+             counter = 0
+
+             # if data[0] <= cin and data[1] >= cin or data[0] >= cin and data[1] <= cout or data[0] <= cout and data[1] >= cout or data[0] <= cin and data[1] >= cout:
+             if (data[0] >= cin and data[0] <= cout) or (data[1] >= cin and data[1] <= cout):
+
+                 print("Stanza Nel Periodo: ", stanza_prenotata.id)
+
+             else:
+                 print("Stanza Fuori Periodo: ", stanza_prenotata.id)
+                 stanza_prenotata.delete()              #mi rimuove la stanza dal db, valutare alternative per rimuovere la stanza dall'elenco prenotazioni totali
 
 
-        risultati_stanze = Filtered_rooms
+        print(prenotazioni_totali)
+
+
         # print("total id ", Filtered_rooms)
 
         # tengo solo gli hotel filtrati che possiedono delle stanze:    DA RIVEDERE PER TROVARE QUALCOSA DI MEGLIO

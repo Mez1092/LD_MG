@@ -21,7 +21,7 @@ class Hotel(models.Model):
     spa = models.BooleanField(default=False)
     descrizione = models.CharField(max_length=1000)
     sito = models.CharField(max_length=600)
-    pub_date = models.DateTimeField('date published')
+    pub_date = models.DateField('date published')
 
     def __str__(self):
         return self.nome
@@ -47,8 +47,8 @@ class Stanza(models.Model):
 class Prenotazioni(models.Model):
     id_stanza = models.ForeignKey(Stanza)
     id_user = models.ForeignKey(User)
-    check_in = models.DateTimeField('check_in')
-    check_out = models.DateTimeField('check_out')
+    check_in = models.DateField('check_in')
+    check_out = models.DateField('check_out')
 
 
 class Voto(models.Model):
@@ -74,8 +74,8 @@ class ListaAttesaStanza (models.Model):
     lista_attesa = models.ForeignKey(Stanza)
     user_id = models.ForeignKey(User)
     user_prenotazione = models.ForeignKey(User, related_name="user_prenotazione")
-    check_in_lista_attesa = models.DateTimeField('check_in date')
-    check_out_lista_attesa = models.DateTimeField('check_out date')
+    check_in_lista_attesa = models.DateField('check_in date')
+    check_out_lista_attesa = models.DateField('check_out date')
 
     def __str__(self):
         return self.lista_attesa.id_hotel.nome + "camera num: " + str(self.lista_attesa.num_camera)

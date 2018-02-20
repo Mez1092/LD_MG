@@ -32,7 +32,7 @@
             <p> 
                 <tr>
                     <td>
-                        <div class="prenotations">
+                        <div class="prenotations" style="background-color: orangered">
                             <p><h2>Hotel: {{p.id_stanza.id_hotel}}</h2></p>
                             <p><h2>Stanza: {{p.id_stanza}}</h2></p>
                             <p><h2>Utente Prenotazione: {{p.id_user}}</h2></p>
@@ -57,9 +57,11 @@
             <p> 
                 <tr>
                     <td>
-                        <div class="preferite">
+                        <div class="preferite" style="background-color: limegreen">
                             <p><h2>Hotel: {{p.stanza_preferita.id_hotel.nome}}</h2></p>
                             <p><h2>Stanza: {{p.stanza_preferita.num_camera}}</h2></p>
+                            <p><h2>Città: {{p.stanza_preferita.id_hotel.citta}}</h2></p>
+
 {#                            <p><h2>Utente Prenotazione: {{p.stanza_preferita.}}</h2></p>#}
 {#                            <p><h2>Check_in: {{p.check_in}}</h2></p>#}
 {#                            <p><h2>Check_out: {{p.check_out}}</h2></p>#}
@@ -71,26 +73,29 @@
         {% endfor %}
     </table>
 
-    <nav>
+
+
+
+
+
+<nav>
     <h1 style="font-size: 300%;">Whishlist:</h1>
-    </nav>
-        <table style="width:100%">
-        {% for p in lista_attesa %}
-            <p> 
-                <tr>
-                    <td>
-                        <div class="WhishList">
-                            <p><h2>Hotel: {{p.lista_attesa.id_hotel}}</h2></p>
-                            <p><h2>Stanza: {{p.stanza_preferita.num_camera}}</h2></p>
-{#                            <p><h2>Utente Prenotazione: {{p.stanza_preferita.}}</h2></p>#}
-{#                            <p><h2>Check_in: {{p.check_in}}</h2></p>#}
-{#                            <p><h2>Check_out: {{p.check_out}}</h2></p>#}
-                            </p>
-                        </div>
-                    </td>
-                </tr>
-            </p>
-        {% endfor %}
+</nav>
+    <table style="width:100%">
+            {% for p in lista_attesa %}
+                <p> 
+                    <tr>
+                        <td>
+                            <div class="lista_attesa" style="background-color: yellow">
+                                <p><h2>Hotel: {{p.lista_attesa.id_hotel}}</h2></p>
+                                <p><h2>Stanza: {{p.lista_attesa.num_camera}}</h2></p>
+
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                </p>
+            {% endfor %}
     </table>
 {% endblock %}
 
