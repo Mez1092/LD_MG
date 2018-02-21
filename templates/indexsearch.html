@@ -44,95 +44,24 @@
                     </td>
                 </tr>
 
-{#                {% if stanze_filtrate %}#}
                     {% for r in stanze_filtrate %}
                         {% if ris_hotel.id == r.id_hotel.id %}
-                           {% if r.id in id_prenotate %}
-                               {% for p in stanze_prenotate %}
-                                   {% if p.id_stanza_id == r.id %}
-                                       {% if data.0 < p.check_out|date:"Y-m-d" and data.0 > p.check_in|date:"Y-m-d" or data.0 <= p.check_in|date:"Y-m-d" and data.1 >= p.check_out|date:"Y-m-d" or data.1 > p.check_in|date:"Y-m-d" and data.1 < p.check_out|date:"Y-m-d" %}
-                                           {% if p.check_in|date:"Y-m-d" > data.1 or p.check_out|date:"Y-m-d" < data.0  %}
-                                                <div class="well" style="background-color: yellow">
-                                                <h3 style="color: lime;">Stanza numero {{r.num_camera}} per {{r.num_persone}} persone</h3>
-                                                <hr>
-                                                <p>
-                                                    Prezzo stanza: {{ r.prezzo }}<br>
-                                                    Giorni alloggio: {{ data.2 }}<br>
-    {#                                                <b>Totale: {{ data.2|moltiplicazione:r.prezzo }}</b><br><hr>#}
-                                                    <p><h4>Features:</h4>
-                                                    <ul style="list-style-type:none">
-                                                        <li>{% if r.aria_condizionata == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Aria Condizionata</li>
-                                                        <li>{% if r.fumatori == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Stanza fumatori</li>
-                                                        <li>{% if r.animali == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Animali</li>
-                                                    </ul>
-                                                    </p>
-                                                </p>
-
-                                                <form action="/myBookingApp_2/prenota/" method="post">
-                                                    {% csrf_token %}
-                                                        <input type="hidden" name="id" value={{r.id}}>
-                                                        <input type="hidden" name="data_arrive" value={{ data.0 }}>
-                                                        <input type="hidden" name="data_leave" value={{ data.1 }}>
-    {#                                                {% if user.is_authenticated %}#}
-                                                        <input type="Submit" name="AggiungiPrenotazione" value="PrenotaLoggatoGiallo" onclick="ReservationEvent()">
-    {#                                                {% else %}#}
-    {#                                                    <input type="Submit" name="Submit" value="Prenota" onclick="LoginEvent()">#}
-    {#                                                {% endif %}#}
-                                                </form>
-
-                                                </div>
-                                           {% else %}
-                                                <div class="well" style="background-color: red">
-                                                <h3 style="color: lime;">Stanza numero {{r.num_camera}} per {{r.num_persone}} persone</h3>
-                                                <hr>
-                                                <p>
-                                                    Prezzo stanza: {{ r.prezzo }}<br>
-                                                    Giorni alloggio: {{ data.2 }}<br>
-    {#                                                <b>Totale: {{ data.2|moltiplicazione:r.prezzo }}</b><br><hr>#}
-                                                    <p><h4>Features:</h4>
-                                                    <ul style="list-style-type:none">
-                                                        <li>{% if r.aria_condizionata == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Aria Condizionata</li>
-                                                        <li>{% if r.fumatori == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Stanza fumatori</li>
-                                                        <li>{% if r.animali == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Animali</li>
-                                                    </ul>
-                                                    </p>
-                                                </p>
-                                                </div>
-                                           {% endif %}
-                                       {% else %}
-                                           <div class="well" style="background-color: green">
-                                           <h3 style="color: lime;">Stanza numero {{r.num_camera}} per {{r.num_persone}} persone</h3>
-                                           <hr>
-                                           <p>
-                                               Prezzo stanza: {{ r.prezzo }}<br>
-                                               Giorni alloggio: {{ data.2 }}<br>
-            {#                                   <b>Totale: {{ data.2|moltiplicazione:r.prezzo }}</b><br><hr>#}
-                                           <p><h4>Features:</h4>
-                                           <ul style="list-style-type:none">
-                                           <li>{% if r.aria_condizionata == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Aria Condizionata</li>
-                                           <li>{% if r.fumatori == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Stanza fumatori</li>
-                                           <li>{% if r.animali == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Animali</li>
-                                           </ul>
-                                           </p>
-                                           </p>
-
-                                            <form action="/myBookingApp_2/prenota/" method="post">
-                                                            {% csrf_token %}
-                                                                <input type="hidden" name="id" value={{r.id}}>
-                                                                <input type="hidden" name="data_arrive" value={{ data.0 }}>
-                                                                <input type="hidden" name="data_leave" value={{ data.1 }}>
-            {#                                                {% if user.is_authenticated %}#}
-                                                                <input type="Submit" name="AggiungiPrenotazione" value="PrenotaLoggatoVerde" onclick="ReservationEvent()">
-            {#                                                {% else %}#}
-            {#                                                    <input type="Submit" name="Submit" value="Prenota" onclick="LoginEvent()">#}
-            {#                                                {% endif %}#}
-                                                        </form>
-
-
-                                           </div>
-                                       {% endif %}
-                                   {% endif %}
-                               {% endfor %}
+                           {% if r.id in stanze_prenotate %}
+                                <div class="well" style="background-color: red">
+                                    <h3 style="color: lime;">Stanza numero {{r.num_camera}} per {{r.num_persone}} persone</h3>
+                                    <hr>
+                                    <p>
+                                        Prezzo stanza: {{ r.prezzo }}<br>
+                                        Giorni alloggio: {{ data.2 }}<br>
+                                        <p><h4>Features:</h4>
+                                        <ul style="list-style-type:none">
+                                            <li>{% if r.aria_condizionata == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Aria Condizionata</li>
+                                            <li>{% if r.fumatori == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Stanza fumatori</li>
+                                            <li>{% if r.animali == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Animali</li>
+                                        </ul>
+                                        </p>
+                                    </p>
+                                    </div>
                            {% else %}
                                <div class="well" style="background-color: green">
                                <h3 style="color: lime;">Stanza numero {{r.num_camera}} per {{r.num_persone}} persone</h3>
@@ -159,15 +88,12 @@
                                                     <input type="Submit" name="AggiungiPrenotazione" value="PrenotaLoggatoVerde" onclick="ReservationEvent()">
 {#                                                {% else %}#}
 {#                                                    <input type="Submit" name="Submit" value="Prenota" onclick="LoginEvent()">#}
-{#                                                {% endif %}#}
+{#                                                {% endif%}#}
                                             </form>
-
-
                                </div>
                            {% endif %}
                         {% endif %}
                     {% endfor %}
-{#                {% endif %}#}
             {% endfor %}
         {% endif %}
     </div>

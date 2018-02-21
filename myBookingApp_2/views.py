@@ -46,6 +46,7 @@ def search(request):
 
         #contiene tutti gli id delle stanze prenotate
         p = [p.id_stanza.id for p in prenotazioni]
+        prenotazioni_filtrate = []
 
 
         if request.method == 'POST':
@@ -124,21 +125,22 @@ def search(request):
 
         for stanza_prenotata in prenotazioni_totali:
              cin = stanza_prenotata.check_in.strftime(date_format)
-             cout = stanza_prenotata.check_in.strftime(date_format)
+             cout = stanza_prenotata.check_out.strftime(date_format)
              counter = 0
 
              # if data[0] <= cin and data[1] >= cin or data[0] >= cin and data[1] <= cout or data[0] <= cout and data[1] >= cout or data[0] <= cin and data[1] >= cout:
-             if (data[0] >= cin and data[0] <= cout) or (data[1] >= cin and data[1] <= cout):
+             if (data[0] >= cin and data[0] <= cout) or (data[1] >= cin and data[1] <= cout) or (data[0] <= cin and data[1] >= cout):
 
                  print("Stanza Nel Periodo: ", stanza_prenotata.id)
+                 prenotazioni_filtrate.append(stanza_prenotata.id_stanza_id)
+
 
              else:
                  print("Stanza Fuori Periodo: ", stanza_prenotata.id)
-                 stanza_prenotata.delete()              #mi rimuove la stanza dal db, valutare alternative per rimuovere la stanza dall'elenco prenotazioni totali
+                 # stanza_prenotata.delete()              #mi rimuove la stanza dal db, valutare alternative per rimuovere la stanza dall'elenco prenotazioni totali
 
 
-        print(prenotazioni_totali)
-
+        print(prenotazioni_filtrate)
 
         # print("total id ", Filtered_rooms)
 
@@ -157,7 +159,7 @@ def search(request):
         #risultati_hotel = Filtered_hotels
 
 
-        return render(request, 'indexsearch.html', {'data': data, 'risultati_hotel': hotels , 'form_search' : form_search_hotel, 'stanze_filtrate': risultati_stanze, "stanze_prenotate" : prenotazioni, "id_prenotate": p })
+        return render(request, 'indexsearch.html', {'data': data, 'risultati_hotel': hotels , 'form_search' : form_search_hotel, 'stanze_filtrate': risultati_stanze, "stanze_prenotate" : prenotazioni_filtrate, "id_prenotate": p })
 
 # filtro da usare nel template per il calcolo del prezzo totale per il soggiorno
 # @register.filter(name='moltiplicazione')
