@@ -159,7 +159,7 @@ def search(request):
         #risultati_hotel = Filtered_hotels
 
 
-        return render(request, 'indexsearch.html', {'data': data, 'risultati_hotel': hotels , 'form_search' : form_search_hotel, 'stanze_filtrate': risultati_stanze, "stanze_prenotate" : prenotazioni_filtrate, "id_prenotate": p })
+        return render(request, 'indexsearch.html', {'data': data, 'risultati_hotel': Filtered_hotels , 'form_search' : form_search_hotel, 'stanze_filtrate': risultati_stanze, "stanze_prenotate" : prenotazioni_filtrate, "id_prenotate": p })
 
 # filtro da usare nel template per il calcolo del prezzo totale per il soggiorno
 # @register.filter(name='moltiplicazione')
@@ -308,24 +308,11 @@ def login_test(request):
 def AggiungiPrenotazione(request):
     print("sono qua")
     room = Stanza.objects.all()
-    # hotel = Hotel.objects.all()
-    # prenotation = Prenotazioni.objects.all()
     new_idStanzaPrenotation = int(request.POST['id'])
     new_userPrenotation = request.user.id
     date_arrive = request.POST['data_arrive']
     date_leave = request.POST['data_leave']
-
-
-
-    # for u in User.objects.all():
-    #     if u.id == new_userPrenotation:
-    #         c = get_object_or_404(User, pk=u.id)
-    #
-    # for r in room:
-    #     if r.pk == new_idStanzaPrenotation:
     obj = Prenotazioni.objects.get_or_create(id_stanza=get_object_or_404(Stanza,pk=new_idStanzaPrenotation), id_user=get_object_or_404(User,pk=new_userPrenotation), check_in=date_arrive, check_out=date_leave)
-
-    # return render(request, 'indexsearch.html', {'hotel': hotel, 'stanza': room, 'prenotation': prenotation})
     form_search_hotel = SearchHotelForm()
     return HttpResponseRedirect('/myBookingApp_2/search', {'form_search': form_search_hotel})
 
