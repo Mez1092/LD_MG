@@ -304,7 +304,7 @@ def login_test(request):
         return render(request, 'login.html', {'form': loginform})
 
 
-@login_required
+#@login_required
 def AggiungiPrenotazione(request):
     print("sono qua")
     room = Stanza.objects.all()
