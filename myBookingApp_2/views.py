@@ -1,4 +1,5 @@
 from django.contrib.auth.models import Permission, Group
+from django.contrib.auth.views import redirect_to_login
 from django.db.models.functions import datetime
 from django.contrib import messages
 from django.db import IntegrityError
@@ -30,8 +31,6 @@ def userpage(request):
 
 
 def search(request):
-
-
         hotels = Hotel.objects.all()
         stanze = Stanza.objects.all()
         stanze = stanze.order_by("prezzo")
@@ -126,7 +125,7 @@ def search(request):
         for stanza_prenotata in prenotazioni_totali:
              cin = stanza_prenotata.check_in.strftime(date_format)
              cout = stanza_prenotata.check_out.strftime(date_format)
-             counter = 0
+
 
              # if data[0] <= cin and data[1] >= cin or data[0] >= cin and data[1] <= cout or data[0] <= cout and data[1] >= cout or data[0] <= cin and data[1] >= cout:
              if (data[0] >= cin and data[0] <= cout) or (data[1] >= cin and data[1] <= cout) or (data[0] <= cin and data[1] >= cout):
@@ -303,16 +302,71 @@ def login_test(request):
         loginform = LoginForm()
         return render(request, 'login.html', {'form': loginform})
 
+def login_2(request):
+    print("login 2")
+    id_hotel = request.session['id_hotel']
+    print(id_hotel)
+    id_camera = request.session['id']
+    data_arrive = request.session['data_arrive']
+    hotel = Hotel.objects.all().filter(id=id_hotel)
 
-@login_required
+    data_leave = request.session['data_leave']
+    print(id,data_arrive,data_leave)
+    if request.method == 'POST':
+        loginform = LoginForm(request.POST)
+        if loginform.is_valid():
+            username = loginform.cleaned_data['Username']
+            password = loginform.cleaned_data['Password']
+            user = authenticate(request, username=username, password=password)
+            print(user)
+        if user is not None:
+            print("autenticated")
+            login(request,user)
+            return render(request, 'riepilogoprenotazione.html', {'id_camera': id_camera,'check_in': data_arrive,'check_out': data_leave, 'nome_stanza' : id_camera, 'nome_hotel':hotel })
+        else:
+            print("not autenticated")
+            return HttpResponseRedirect('/myBookingApp_2/search/')
+    else:
+        loginform = LoginForm()
+        return render(request, 'login.html', {'form': loginform})
+
+def RiepilogoPrenotazione(request):
+    print("riepilogoprenotazione")
+    if not request.user.is_authenticated():
+        print("non autenticato")
+        if request.method == "POST":
+            print("non autenticato post")
+            request.session['id_hotel'] = int(request.POST['id_hotel'])
+            request.session['id'] = int(request.POST['id'])
+            request.session['data_arrive'] = request.POST['data_arrive']
+            request.session['data_leave'] = request.POST['data_leave']
+            print("salvato in sessione")
+            return HttpResponseRedirect('/myBookingApp_2/login_2/')
+    else:
+        if request.method == "POST":
+            # checkin = request.session['data_arrive']
+            # checkout = request.session['data_leave']
+            # new_idStanzaPrenotation = request.session['id']
+            print("sono autenticato e sono nella riepilogo")
+            id_hotel = request.POST['id_hotel']
+            id_camera = request.POST['id']
+            data_arrive = request.POST['data_arrive']
+            data_leave = request.POST['data_leave']
+            hotel = Hotel.objects.all().filter(id =id_hotel)
+            print(id, data_arrive, data_leave)
+            return render(request, 'riepilogoprenotazione.html',{'id_camera': id_camera, 'check_in': data_arrive, 'check_out': data_leave,'nome_stanza': id_camera, 'nome_hotel': hotel})
+        # DO STUFF
+        else:
+            print("else")
+
+
 def AggiungiPrenotazione(request):
-    print("sono qua")
+
     room = Stanza.objects.all()
     new_idStanzaPrenotation = int(request.POST['id'])
     new_userPrenotation = request.user.id
     date_arrive = request.POST['data_arrive']
     date_leave = request.POST['data_leave']
     obj = Prenotazioni.objects.get_or_create(id_stanza=get_object_or_404(Stanza,pk=new_idStanzaPrenotation), id_user=get_object_or_404(User,pk=new_userPrenotation), check_in=date_arrive, check_out=date_leave)
-    form_search_hotel = SearchHotelForm()
-    return HttpResponseRedirect('/myBookingApp_2/search', {'form_search': form_search_hotel})
+    return render(request, 'successoprenotazione.html')
 

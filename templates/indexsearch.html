@@ -78,18 +78,18 @@
                                </ul>
                                </p>
                                </p>
-
-                                <form action="/myBookingApp_2/prenota/" method="post">
-                                                {% csrf_token %}
-                                                    <input type="hidden" name="id" value={{r.id}}>
-                                                    <input type="hidden" name="data_arrive" value={{ data.0 }}>
-                                                    <input type="hidden" name="data_leave" value={{ data.1 }}>
-{#                                                {% if user.is_authenticated %}#}
-                                                    <input type="Submit" name="AggiungiPrenotazione" value="PrenotaLoggatoVerde" onclick="ReservationEvent()">
-{#                                                {% else %}#}
-{#                                                    <input type="Submit" name="Submit" value="Prenota" onclick="LoginEvent()">#}
-{#                                                {% endif%}#}
-                                            </form>
+                                   <form action="/myBookingApp_2/riepilogoprenotazione/" method="post">
+                                        {% csrf_token %}
+                                            <input type="hidden" name="id_hotel" value={{ris_hotel.id}}>
+                                            <input type="hidden" name="id" value={{r.id}}>
+                                            <input type="hidden" name="data_arrive" value={{ data.0 }}>
+                                            <input type="hidden" name="data_leave" value={{ data.1 }}>
+                                        {% if user.is_authenticated %}
+                                            <input type="Submit" name="AggiungiPrenotazione" value="PrenotaLoggatoVerde" onclick="ReservationEvent()">
+                                        {% else %}
+                                            <input type="Submit" name="Submit" value="PrenotaNONLoggatoVerde">
+                                        {% endif%}
+                                   </form>
                                </div>
                            {% endif %}
                         {% endif %}

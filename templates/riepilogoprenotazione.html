@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+
+
+<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
+
+{#<header>#}
+{#    <div style="color: #eee; margin: auto; width: 100%; background: rgba(30, 30, 30, 0.7); padding-top: 5px; padding-bottom: 5px;">#}
+{#        <ul>#}
+{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/search">Location list</a></li>#}
+{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/vote">My Vote</a></li>#}
+{#        </ul>#}
+{#        <ur>#}
+{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/">Home</a></li>#}
+{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/creahotel"> Add Location</a></li>#}
+{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/creastanza"> Add Room</a></li>#}
+{#        </ur>#}
+{##}
+{#        <h1>User: {{ user.username }}</h1>#}
+{#    </div>#}
+{#</header>#}
+
+<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
+
+
+{% block content %}
+<nav>
+    <h1 style="font-size: 300%;">Riepilogo prenotazione:</h1>
+</nav>
+    {% for h in nome_hotel %}
+
+         <table style="width:100%">
+                <p> 
+                    <tr>
+                        <td>
+                            <div class="prenotations" style="background-color: orangered">
+                                <p><h2>Hotel: {{h.nome}}</h2></p>
+                                <p><h2>Stanza: {{nome_stanza}}</h2></p>
+                                <p><h2>Città: {{h.citta}}</h2></p>
+                                <p><h2>indirizzo: {{h.indirizzo}}</h2></p>
+                                <p><h2>Utente Prenotazione: {{user}}</h2></p>
+                                <p><h2>Check_in: {{check_in}}</h2></p>
+                                <p><h2>Check_out: {{check_out}}</h2></p>
+                                </p>
+                            </div>
+                            <form action="/myBookingApp_2/prenota/" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="id_hotel" value={{h.id}}>
+                                <input type="hidden" name="id" value={{nome_stanza}}>
+                                <input type="hidden" name="data_arrive" value={{ check_in }}>
+                                <input type="hidden" name="data_leave" value={{ check_out }}>
+
+                                <input type="Submit" name="AggiungiPrenotazione" value="Conferma Prenotazione">
+                            </form>
+
+                        </td>
+                    </tr>
+                </p>
+        </table>
+    {% endfor %}
+{% endblock %}
+<footer>
+    <em>scisoacsacoakocak</em>
+</footer>
+<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
+</body>
+</html>
