@@ -1,32 +1,11 @@
 {% extends "base.html" %}
 
-
-
-<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
-
-{#<header>#}
-{#    <div style="color: #eee; margin: auto; width: 100%; background: rgba(30, 30, 30, 0.7); padding-top: 5px; padding-bottom: 5px;">#}
-{#        <ul>#}
-{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/search">Location list</a></li>#}
-{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/vote">My Vote</a></li>#}
-{#        </ul>#}
-{#        <ur>#}
-{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/">Home</a></li>#}
-{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/creahotel"> Add Location</a></li>#}
-{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/creastanza"> Add Room</a></li>#}
-{#        </ur>#}
-{##}
-{#        <h1>User: {{ user.username }}</h1>#}
-{#    </div>#}
-{#</header>#}
-
-<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
-
-
 {% block content %}
 <nav>
     <h1 style="font-size: 300%;">Prenotations:</h1>
 </nav>
+
+
      <table style="width:100%">
         {% for p in prenotazioni %}
             <p> 
@@ -39,43 +18,37 @@
                             <p><h2>Check_in: {{p.check_in}}</h2></p>
                             <p><h2>Check_out: {{p.check_out}}</h2></p>
                             </p>
+
+                            {% if p.check_out.year <= current_date.year and p.check_out.month <= current_date.month and p.check_out.day <= current_date.day %}
+
+                                    <h2>Vote your holiday:</h2>
+                                            <form action="/myBookingApp_2/votazione/" method="POST">
+                                                {% csrf_token %}
+
+                                                <input type="number" name="stelle" value="1" min="1" max="5">
+                                                <input type="Submit" name="SubmitVote" value="Vote" id="mySubmitVote"><br><br>
+                                                <input type="hidden" name="HotelID" value={{ p.id_stanza.id_hotel_id }}>
+                                            </form>
+                            {% endif%}
+
+                                    <form action="/myBookingApp_2/cancellaprenotazione/" method="post">
+                                        {% csrf_token %}
+
+                                            <input type="hidden" name="IdPrenotazione" value={{p.id}}>
+{#                                            <input type="hidden" name="data_checkin" value={{p.check_in}}>#}
+{#                                            <input type="hidden" name="data_checkout" value={{p.check_out}}>#}
+
+                                            <input type="Submit" name="CancellaPrenotazione" value="Cancella Prenotazione">
+
+
+                                    </form>
+
                         </div>
                     </td>
                 </tr>
             </p>
         {% endfor %}
     </table>
-
-
-<nav>
-    <h1 style="font-size: 300%;">Preferite:</h1>
-</nav>
-
-
-    <table style="width:100%">
-        {% for p in preferite %}
-            <p> 
-                <tr>
-                    <td>
-                        <div class="preferite" style="background-color: limegreen">
-                            <p><h2>Hotel: {{p.stanza_preferita.id_hotel.nome}}</h2></p>
-                            <p><h2>Stanza: {{p.stanza_preferita.num_camera}}</h2></p>
-                            <p><h2>Città: {{p.stanza_preferita.id_hotel.citta}}</h2></p>
-
-{#                            <p><h2>Utente Prenotazione: {{p.stanza_preferita.}}</h2></p>#}
-{#                            <p><h2>Check_in: {{p.check_in}}</h2></p>#}
-{#                            <p><h2>Check_out: {{p.check_out}}</h2></p>#}
-                            </p>
-                        </div>
-                    </td>
-                </tr>
-            </p>
-        {% endfor %}
-    </table>
-
-
-
-
 
 
 <nav>
@@ -91,6 +64,19 @@
                                 <p><h2>Stanza: {{p.lista_attesa.num_camera}}</h2></p>
 
                                 </p>
+
+                                        <form action="/myBookingApp_2/cancellawishlist/" method="post">
+                                            {% csrf_token %}
+
+                                                <input type="hidden" name="IdWishlist" value={{p.id}}>
+    {#                                            <input type="hidden" name="data_checkin" value={{p.check_in}}>#}
+    {#                                            <input type="hidden" name="data_checkout" value={{p.check_out}}>#}
+
+                                                <input type="Submit" name="CancellaWishlist" value="Cancella Wishlist">
+
+
+                                        </form>
+
                             </div>
                         </td>
                     </tr>
@@ -99,70 +85,9 @@
     </table>
 {% endblock %}
 
-<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
-{#<aside>#}
-{#    <table style="width:100%">#}
-{#        {% for p in RoomFavorite %}#}
-{#            <p> #}
-{#                <tr>#}
-{#                    <td>#}
-{#                        <div class="favorites">#}
-{#                            <p><h2>Location: {{p.room_favorite.id_location.name}}</h2></p>#}
-{#                            {{ p.room_favorite.id_location.description }}#}
-{#                            <hr>#}
-{#                            <p>Room number: {{p.room_favorite.number_room}}</p>#}
-{#                            <hr>#}
-{#                            <p><h4>Location position:</h4></p>#}
-{#                            <p>{{ p.room_favorite.id_location.address }} - {{ p.room_favorite.id_location.municipality }} - {{ p.room_favorite.id_location.city }} - {{ p.room_favorite.id_location.country }}</p>#}
-{#                            <p><a href="{{p.room_favorite.id_location.site_web}}">Site web {{p.room_favorite.id_location.name}}</a></p>#}
-{#                            <form action="/TravelBook/" method="POST">#}
-{#                                {% csrf_token %}#}
-{#                                <input type="Submit" name="SubmitDeleteFavorite" value="Delete from favorites" onclick=DeleteFavoriteEvent()>#}
-{#                                <input type="hidden" name="FavoriteId" value={{p.id}}>#}
-{#                            </form>#}
-{#                        </div>#}
-{#                    </td>#}
-{#                </tr>#}
-{#            </p>#}
-{#        {% endfor %}#}
-{#    </table>#}
-{#</aside>#}
-<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
-<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
-{#<maction>#}
-{#    <table style="width:100%">#}
-{#        {% for p in RoomWaitingList %}#}
-{#            <p> #}
-{#                <tr>#}
-{#                    <td>#}
-{#                        <div class="waiting_list">#}
-{#                            <p><h2>Location: {{p.room_waiting_list.id_location.name}}</h2></p>#}
-{#                            {{ p.room_waiting_list.id_location.description }}#}
-{#                            <hr>#}
-{#                            <p>Room number: {{p.room_waiting_list.number_room}}</p>#}
-{#                            <hr>#}
-{#                            <p>User booked: {{ p.user_reservetion }}</p>#}
-{#                            <p>User attend: {{ p.user_waiting_list }}</p>#}
-{#                            <hr>#}
-{#                            <p><h4>Location position:</h4></p>#}
-{#                            <p>{{ p.room_waiting_list.id_location.address }} - {{ p.room_waiting_list.id_location.municipality }} - {{ p.room_waiting_list.id_location.city }} - {{ p.room_waiting_list.id_location.country }}</p>#}
-{#                            <p><a href="{{p.room_waiting_list.id_location.site_web}}">Site web {{p.room_waiting_list.id_location.name}}</a></p>#}
-{#                            <form action="/TravelBook/" method="POST">#}
-{#                                {% csrf_token %}#}
-{#                                <input type="Submit" name="SubmitDeleteWaitingList" value="Delete from waiting list" onclick=DeleteWaitingList()>#}
-{#                                <input type="hidden" name="WaitingListId" value={{p.id}}>#}
-{#                            </form>#}
-{#                        </div>#}
-{#                    </td>#}
-{#                </tr>#}
-{#            </p>#}
-{#        {% endfor %}#}
-{#    </table>#}
-{#</maction>#}
-<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
+
 <footer>
     <em>scisoacsacoakocak</em>
 </footer>
-<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
 </body>
 </html>

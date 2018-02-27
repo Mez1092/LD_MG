@@ -55,25 +55,25 @@ class Voto(models.Model):
     hotel_id = models.ForeignKey(Hotel)
     user_id = models.ForeignKey(User)
     voto = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(5)])
-
+    unique_together = ('hotel_id', 'user_id')
     def __str__(self):
         return self.hotel_id.nome
 
 
 
-class Stanzapreferita (models.Model):
-    stanza_preferita = models.ForeignKey(Stanza)
-    user_id = models.ForeignKey(User)
 
-    def __str__(self):
-        return self.stanza_preferita.id_hotel.nome + "camera num: "+ str(self.stanza_preferita.num_camera)
-
+# class Stanzapreferita (models.Model):
+#     stanza_preferita = models.ForeignKey(Stanza)
+#     user_id = models.ForeignKey(User)
+#
+#     def __str__(self):
+#         return self.stanza_preferita.id_hotel.nome + "camera num: "+ str(self.stanza_preferita.num_camera)
+#
 
 
 class ListaAttesaStanza (models.Model):
     lista_attesa = models.ForeignKey(Stanza)
     user_id = models.ForeignKey(User)
-    user_prenotazione = models.ForeignKey(User, related_name="user_prenotazione")
     check_in_lista_attesa = models.DateField('check_in date')
     check_out_lista_attesa = models.DateField('check_out date')
 

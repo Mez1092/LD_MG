@@ -21,13 +21,15 @@ def index(request):
     return render(request, 'index.html', {'hotels': hotels , "stanze" : stanze})
 
 def userpage(request):
+    current_date = datetime.date.today()
+    print(current_date)
     current_user = request.user
     prenotation = Prenotazioni.objects.all().filter(id_user=current_user)
-    preferite = Stanzapreferita.objects.all().filter(user_id=current_user)
+    # preferite = Stanzapreferita.objects.all().filter(user_id=current_user)
     lista_attesa = ListaAttesaStanza.objects.all().filter(user_id=current_user)
 
 
-    return render(request, 'userpage.html', {"prenotazioni": prenotation, "preferite": preferite, "lista_attesa": lista_attesa})
+    return render(request, 'userpage.html', {"prenotazioni": prenotation, "lista_attesa": lista_attesa, "current_date": current_date})
 
 
 def search(request):
@@ -114,6 +116,27 @@ def search(request):
                 risultati_stanze = Filtered_rooms
                 f_id_stanze_filtrate = [room.id for room in Filtered_rooms]
 
+                for stanza_prenotata in prenotazioni_totali:
+                    cin = stanza_prenotata.check_in.strftime(date_format)
+                    cout = stanza_prenotata.check_out.strftime(date_format)
+
+                    # if data[0] <= cin and data[1] >= cin or data[0] >= cin and data[1] <= cout or data[0] <= cout and data[1] >= cout or data[0] <= cin and data[1] >= cout:
+                    if (data[0] >= cin and data[0] <= cout) or (data[1] >= cin and data[1] <= cout) or (
+                            data[0] <= cin and data[1] >= cout):
+
+                        print("Stanza Nel Periodo: ", stanza_prenotata.id)
+                        prenotazioni_filtrate.append(stanza_prenotata.id_stanza_id)
+
+
+                    else:
+                        print("Stanza Fuori Periodo: ", stanza_prenotata.id)
+                        # stanza_prenotata.delete()              #mi rimuove la stanza dal db, valutare alternative per rimuovere la stanza dall'elenco prenotazioni totali
+
+                return render(request, 'indexsearch.html',
+                              {'data': data, 'risultati_hotel': Filtered_hotels, 'form_search': form_search_hotel,
+                               'stanze_filtrate': risultati_stanze, "stanze_prenotate": prenotazioni_filtrate,
+                               "id_prenotate": p})
+
 
         else:
 
@@ -122,24 +145,9 @@ def search(request):
             return render(request, 'indexsearch.html', {'form_search' : form_search_hotel})
 
 
-        for stanza_prenotata in prenotazioni_totali:
-             cin = stanza_prenotata.check_in.strftime(date_format)
-             cout = stanza_prenotata.check_out.strftime(date_format)
 
 
-             # if data[0] <= cin and data[1] >= cin or data[0] >= cin and data[1] <= cout or data[0] <= cout and data[1] >= cout or data[0] <= cin and data[1] >= cout:
-             if (data[0] >= cin and data[0] <= cout) or (data[1] >= cin and data[1] <= cout) or (data[0] <= cin and data[1] >= cout):
-
-                 print("Stanza Nel Periodo: ", stanza_prenotata.id)
-                 prenotazioni_filtrate.append(stanza_prenotata.id_stanza_id)
-
-
-             else:
-                 print("Stanza Fuori Periodo: ", stanza_prenotata.id)
-                 # stanza_prenotata.delete()              #mi rimuove la stanza dal db, valutare alternative per rimuovere la stanza dall'elenco prenotazioni totali
-
-
-        print(prenotazioni_filtrate)
+        # print(prenotazioni_filtrate)
 
         # print("total id ", Filtered_rooms)
 
@@ -158,7 +166,6 @@ def search(request):
         #risultati_hotel = Filtered_hotels
 
 
-        return render(request, 'indexsearch.html', {'data': data, 'risultati_hotel': Filtered_hotels , 'form_search' : form_search_hotel, 'stanze_filtrate': risultati_stanze, "stanze_prenotate" : prenotazioni_filtrate, "id_prenotate": p })
 
 # filtro da usare nel template per il calcolo del prezzo totale per il soggiorno
 # @register.filter(name='moltiplicazione')
@@ -370,3 +377,65 @@ def AggiungiPrenotazione(request):
     obj = Prenotazioni.objects.get_or_create(id_stanza=get_object_or_404(Stanza,pk=new_idStanzaPrenotation), id_user=get_object_or_404(User,pk=new_userPrenotation), check_in=date_arrive, check_out=date_leave)
     return render(request, 'successoprenotazione.html')
 
+
+
+# def AggiungiAiPreferiti(request):
+#     preferite = Stanzapreferita.objects.all()
+#     room = Stanza.objects.all()
+#     new_idStanzaPreferita = int(request.POST['id'])
+#     new_userPreferita = request.user.id
+#
+#     preferite = preferite.filter(user_id = new_userPreferita)
+#     if new_idStanzaPreferita not in preferite:
+#             obj = Stanzapreferita.objects.get_or_create(stanza_preferita=get_object_or_404(Stanza,pk=new_idStanzaPreferita), user_id=get_object_or_404(User,pk=new_userPreferita))
+#             form_search_hotel = SearchHotelForm()
+#             return HttpResponseRedirect('/myBookingApp_2/search', {'form_search': form_search_hotel})
+#     else :
+#             form_search_hotel = SearchHotelForm()
+#             return HttpResponseRedirect('/myBookingApp_2/search', {'form_search': form_search_hotel})
+
+
+def AggiungiAWishlist(request):
+    whishlist = ListaAttesaStanza.objects.all()
+    
+    room = Stanza.objects.all()
+    new_idStanzaWishlist = int(request.POST['id'])
+    new_userWishlist = request.user.id
+    date_arrive = request.POST['data_arrive']
+    date_leave = request.POST['data_leave']
+    print(date_arrive)
+
+    obj = ListaAttesaStanza.objects.get_or_create(lista_attesa=get_object_or_404(Stanza, pk=new_idStanzaWishlist), user_id = get_object_or_404(User, pk = new_userWishlist), check_in_lista_attesa = date_arrive, check_out_lista_attesa = date_leave)
+    form_search_hotel = SearchHotelForm()
+
+    return HttpResponseRedirect('/myBookingApp_2/search', {'form_search': form_search_hotel})
+
+
+def CancellaPrenotazione(request):
+    PrenotationDelete = int(request.POST['IdPrenotazione'])
+    Prenotazioni.objects.filter(id=PrenotationDelete).delete()
+    return HttpResponseRedirect('/myBookingApp_2/userpage')
+
+
+def CancellaWishlist(request):
+    WishlistDelete = int(request.POST['IdWishlist'])
+    ListaAttesaStanza.objects.filter(id=WishlistDelete).delete()
+    return HttpResponseRedirect('/myBookingApp_2/userpage')
+
+
+def Votazione(request):
+    hotels = Hotel.objects.all()
+    voto = request.POST['stelle']
+    hotel_id = int(request.POST['HotelID'])
+
+    try:
+        obj = Voto.objects.get_or_create(hotel_id_id=hotel_id, user_id_id=request.user.id, voto=voto)
+        return HttpResponseRedirect('/myBookingApp_2/userpage')
+
+    except IntegrityError as e:
+        messages.info(request, 'Voto già espresso per questa struttura!')
+        return HttpResponseRedirect('/myBookingApp_2/userpage')
+
+
+
+# return HttpResponseRedirect('/myBookingApp_2/userpage')

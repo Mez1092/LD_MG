@@ -61,6 +61,17 @@
                                         </ul>
                                         </p>
                                     </p>
+
+
+
+                                    <form action="/myBookingApp_2/wishlist/" method="post">
+                                                    {% csrf_token %}
+                                                        <input type="hidden" name="id" value={{r.id}}>
+                                                        <input type="hidden" name="data_arrive" value={{ data.0 }}>
+                                                        <input type="hidden" name="data_leave" value={{ data.1 }}>
+                                                        <input type="Submit" name="AggiungiAWishlist" value="Aggiungi alla Wishlist">
+                                    </form>
+
                                     </div>
                            {% else %}
                                <div class="well" style="background-color: green">
@@ -87,9 +98,16 @@
                                         {% if user.is_authenticated %}
                                             <input type="Submit" name="AggiungiPrenotazione" value="PrenotaLoggatoVerde" onclick="ReservationEvent()">
                                         {% else %}
-                                            <input type="Submit" name="Submit" value="PrenotaNONLoggatoVerde">
+                                            <input type="Submit" name="Submit" value="PrenotaNONLoggatoVerde" onclick="Loginrequired()">
                                         {% endif%}
                                    </form>
+
+{#                                <form action="/myBookingApp_2/preferiti/" method="post">#}
+{#                                                {% csrf_token %}#}
+{#                                                    <input type="hidden" name="id" value={{r.id}}>#}
+{#                                                    <input type="Submit" name="AggiungiAiPreferiti" value="Aggiungi ai Preferiti">#}
+{#                                </form>#}
+
                                </div>
                            {% endif %}
                         {% endif %}
