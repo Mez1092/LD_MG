@@ -3,7 +3,7 @@
 {% block title %}Creazione Hotel  {% endblock %}
 
 {% block content %}
-    <div class="Container " align="center" style="background-color: #cc52fe;padding: 10px" >
+    <div class="well " align="center" style="background-color: #ccbb99;padding: 10px" >
         <form action="." method="POST">
             {% csrf_token %}
                 {{form_aggiungi_hotel.as_p }}

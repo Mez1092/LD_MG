@@ -88,7 +88,7 @@ DATABASES = {
 
         'OPTIONS': {
             'sql_mode':'STRICT_TRANS_TABLES',
-            'read_default_file':'/home/marco/Desktop/LD_Greg_Mezz/Booking_2/Booking_2/db.config',
+            'read_default_file':'C:\Users\stefano\Desktop\Test\Booking_2\Booking_2\db.config',
         }
 
     }

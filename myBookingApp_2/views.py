@@ -21,14 +21,14 @@ def index(request):
     return render(request, 'index.html', {'hotels': hotels , "stanze" : stanze})
 
 def userpage(request):
-    current_user = request.user
-    prenotation = Prenotazioni.objects.all().filter(id_user=current_user)
-    preferite = Stanzapreferita.objects.all().filter(user_id=current_user)
-    lista_attesa = ListaAttesaStanza.objects.all().filter(user_id=current_user)
-
-
-    return render(request, 'userpage.html', {"prenotazioni": prenotation, "preferite": preferite, "lista_attesa": lista_attesa})
-
+    if request.user.groups.filter(name__in=["Utente"]).exists():
+        current_user = request.user
+        prenotation = Prenotazioni.objects.all().filter(id_user=current_user)
+        preferite = Stanzapreferita.objects.all().filter(user_id=current_user)
+        lista_attesa = ListaAttesaStanza.objects.all().filter(user_id=current_user)
+        return render(request, 'userpage.html', {"prenotazioni": prenotation, "preferite": preferite, "lista_attesa": lista_attesa, 'visible' : False})
+    else:
+        return render(request, 'userpage.html', {'visible' : True})
 
 def search(request):
         hotels = Hotel.objects.all()
@@ -166,78 +166,87 @@ def search(request):
 #     print("value: "+" arg: ", value, arg)
 #     return value*arg
 
+
+#Eseguibile solo da chi possiede i permessi Direzione
 def creastanza(request):
-    if request.method == 'POST':
-        form_crea_stanza = AddRoomForm(request.POST)
-        if form_crea_stanza.is_valid():
-            f_id_hotel = request.POST['id_hotel']
-            f_num_camera = request.POST['num_camera']
-            f_prezzo = request.POST['prezzo']
-            f_prezzo_festivita = request.POST['prezzo_festivita']
-            f_num_persone = request.POST['num_persone']
-            f_aria_condizionata = 'aria_condizionata' in request.POST.keys()
-            f_camera_fumatori = 'camera_fumatori' in request.POST.keys()
-            f_animali = 'animali' in request.POST.keys()
-            h = get_object_or_404(Hotel,pk=f_id_hotel)
-            try:
-                Stanza.objects.create(id_hotel=h, num_camera=int(f_num_camera), prezzo=float(f_prezzo), prezzo_festivita=float(f_prezzo_festivita), num_persone=int(f_num_persone),
-                    aria_condizionata=f_aria_condizionata, camera_fumatori=f_camera_fumatori, animali=f_animali)
-                return HttpResponseRedirect('/myBookingApp/creazioneavvenuta')
-            except IntegrityError as e:
-                messages.info(request, 'Impossibile creare stanza! Stanza gia esistente per hotel selezionato')
-        # Verifica custom se nuova stanza ha numero camera gia esistente
-        # for l in Hotel.objects.all():
-        #     if (l.id == int(f_id_hotel)):
-        #         stanze_id = Stanza.objects.filter(id_hotel=l.id)
-        #         for r in stanze_id:
-        #             if (r.num_camera == int(f_num_camera)):
-        #                 print("numero camera gia esistente")
-    else:
-        # se sono in una get faccio vedere il form vuoto
-        form_crea_stanza = AddRoomForm()
-    return render(request, 'creastanza.html', {'form_aggiungi_stanza': form_crea_stanza})
+    if request.user.groups.filter(name__in = ["Direzione"]).exists():
+        if request.method == 'POST':
 
+            form_crea_stanza = AddRoomForm(request.POST)
+            if form_crea_stanza.is_valid():
+                f_id_hotel = request.POST['id_hotel']
+                f_num_camera = request.POST['num_camera']
+                f_prezzo = request.POST['prezzo']
+                f_prezzo_festivita = request.POST['prezzo_festivita']
+                f_num_persone = request.POST['num_persone']
+                f_aria_condizionata = 'aria_condizionata' in request.POST.keys()
+                f_camera_fumatori = 'camera_fumatori' in request.POST.keys()
+                f_animali = 'animali' in request.POST.keys()
+                h = get_object_or_404(Hotel,pk=f_id_hotel)
+                try:
+                    Stanza.objects.create(id_hotel=h, num_camera=int(f_num_camera), prezzo=float(f_prezzo), prezzo_festivita=float(f_prezzo_festivita), num_persone=int(f_num_persone),
+                        aria_condizionata=f_aria_condizionata, camera_fumatori=f_camera_fumatori, animali=f_animali)
+                    return render(request, 'successocreazionestanza.html')
+                except IntegrityError as e:
+                    messages.info(request, 'Impossibile creare stanza! Stanza gia esistente per hotel selezionato')
+            # Verifica custom se nuova stanza ha numero camera gia esistente
+            # for l in Hotel.objects.all():
+            #     if (l.id == int(f_id_hotel)):
+            #         stanze_id = Stanza.objects.filter(id_hotel=l.id)
+            #         for r in stanze_id:
+            #             if (r.num_camera == int(f_num_camera)):
+            #                 print("numero camera gia esistente")
+        else:
+            # se sono in una get faccio vedere il form vuoto
+            form_crea_stanza = AddRoomForm()
+        return render(request, 'creastanza.html', {'form_aggiungi_stanza': form_crea_stanza})
+    else:
+        return render(request, 'accessonegato.html')
+
+#Eseguibile solo da chi possiede i permessi Direzione
 def creahotel(request):
-    if request.method == 'POST':
-        form_crea_hotel = AddHotelForm(request.POST)
-        if form_crea_hotel.is_valid():
-            f_nome = request.POST['nome']
-            f_indirizzo = request.POST['indirizzo']
-            f_citta = request.POST['citta']
-            f_stato = request.POST['stato']
-            f_num_telefono = request.POST['num_telefono']
-            f_piscina = 'piscina' in request.POST.keys()
-            f_WiFi = 'WiFi' in request.POST.keys()
-            f_accesso_disabili = 'accesso_disabili' in request.POST.keys()
-            f_ristorante = 'ristorante' in request.POST.keys()
-            f_parcheggio = 'parcheggio' in request.POST.keys()
-            f_palestra = 'palestra' in request.POST.keys()
-            f_bar = 'bar' in request.POST.keys()
-            f_spa = 'spa' in request.POST.keys()
-            f_descrizione = 'descrizione' in request.POST.keys()
-            f_sito = 'sito' in request.POST.keys()
-            try:
-                Hotel.objects.create(nome=f_nome, indirizzo=f_indirizzo, citta=f_citta,
-                                     stato=f_stato, num_telefono=f_num_telefono,
-                                     piscina=f_piscina, WiFi=f_WiFi,
-                                     accesso_disabili=f_accesso_disabili,
-                                     ristorante=f_ristorante, parcheggio=f_parcheggio,
-                                     palestra=f_palestra,bar=f_bar,
-                                     spa=f_spa, descrizione=f_descrizione,
-                                     sito=f_sito,
-                                     pub_date = datetime.datetime.now()
-                                     )
-                return HttpResponseRedirect('/myBookingApp/creazioneavvenuta')
-            except IntegrityError as e:
-                messages.info(request, 'Impossibile creare hotel! Hotel gia esistente!')
+    if request.user.groups.filter(name__in=["Direzione"]).exists():
+        if request.method == 'POST':
+            form_crea_hotel = AddHotelForm(request.POST)
+            if form_crea_hotel.is_valid():
+                f_nome = request.POST['nome']
+                f_indirizzo = request.POST['indirizzo']
+                f_citta = request.POST['citta']
+                f_stato = request.POST['stato']
+                f_num_telefono = request.POST['num_telefono']
+                f_piscina = 'piscina' in request.POST.keys()
+                f_WiFi = 'WiFi' in request.POST.keys()
+                f_accesso_disabili = 'accesso_disabili' in request.POST.keys()
+                f_ristorante = 'ristorante' in request.POST.keys()
+                f_parcheggio = 'parcheggio' in request.POST.keys()
+                f_palestra = 'palestra' in request.POST.keys()
+                f_bar = 'bar' in request.POST.keys()
+                f_spa = 'spa' in request.POST.keys()
+                f_descrizione = 'descrizione' in request.POST.keys()
+                f_sito = 'sito' in request.POST.keys()
+                try:
+                    Hotel.objects.create(nome=f_nome, indirizzo=f_indirizzo, citta=f_citta,
+                                         stato=f_stato, num_telefono=f_num_telefono,
+                                         piscina=f_piscina, WiFi=f_WiFi,
+                                         accesso_disabili=f_accesso_disabili,
+                                         ristorante=f_ristorante, parcheggio=f_parcheggio,
+                                         palestra=f_palestra,bar=f_bar,
+                                         spa=f_spa, descrizione=f_descrizione,
+                                         sito=f_sito,
+                                         pub_date = datetime.datetime.now()
+                                         )
+                    return render(request, 'successocrezionehotel.html')
+                except IntegrityError as e:
+                    messages.info(request, 'Impossibile creare hotel! Hotel gia esistente!')
 
+        else:
+            # se sono in una get faccio vedere il form vuoto
+            form_crea_hotel = AddHotelForm()
+        return render(request, 'creahotel.html', {'form_aggiungi_hotel': form_crea_hotel})
     else:
-        # se sono in una get faccio vedere il form vuoto
-        form_crea_hotel = AddHotelForm()
-    return render(request, 'creahotel.html', {'form_aggiungi_hotel': form_crea_hotel})
+        return render(request, 'accessonegato.html')
 
-def successocreazione(request):
-    return render_to_response('esitopositivocreazione.html')
+
 
 # @login_required
 # def login_test(request):
@@ -248,40 +257,46 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect('/myBookingApp_2/search/')
 
-
+#Eseguibile solo se non loggato
 def register_user(request):
-    if request.method == 'POST':
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            user = User.objects.create_user(
-            username =form.cleaned_data['username'],
-            password =form.cleaned_data['password1'],
-            email =form.cleaned_data['email']
-            )
-            group = Group.objects.get(name='Utente')
-            user.groups.add(group)
+    if not request.user.is_authenticated():
+        if request.method == 'POST':
+            form = RegistrationForm(request.POST)
+            if form.is_valid():
+                user = User.objects.create_user(
+                username =form.cleaned_data['username'],
+                password =form.cleaned_data['password1'],
+                email =form.cleaned_data['email']
+                )
+                group = Group.objects.get(name='Utente')
+                user.groups.add(group)
 
-            return HttpResponseRedirect('esitopositivocreazione.html')
+                return render(request, 'successocreazioneutente.html')
+        else:
+            form = RegistrationForm()
+        return render(request, 'register.html', {'form': form})
     else:
-        form = RegistrationForm()
-    return render(request, 'register.html', {'form': form})
+        return render(request, 'accessonegato.html')
 
+#Eseguibile solo se non loggato
 def register_gestore(request):
-
-    if request.method == 'POST':
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            user = User.objects.create_user(
-            username =form.cleaned_data['username'],
-            password =form.cleaned_data['password1'],
-            email =form.cleaned_data['email']
-            )
-            group = Group.objects.get(name = 'Direzione')
-            user.groups.add(group)
-            return HttpResponseRedirect('registrazione_avvenuta.html')
+    if not request.user.is_authenticated():
+        if request.method == 'POST':
+            form = RegistrationForm(request.POST)
+            if form.is_valid():
+                user = User.objects.create_user(
+                username =form.cleaned_data['username'],
+                password =form.cleaned_data['password1'],
+                email =form.cleaned_data['email']
+                )
+                group = Group.objects.get(name = 'Direzione')
+                user.groups.add(group)
+                return render(request, 'successocreazionedirettore.html')
+        else:
+            form = RegistrationForm()
+        return render(request, 'register.html', {'form': form})
     else:
-        form = RegistrationForm()
-    return render(request, 'register.html', {'form': form})
+        return render(request, 'accessonegato.html')
 
 def login_test(request):
     if request.method == 'POST':
@@ -330,43 +345,48 @@ def login_2(request):
         loginform = LoginForm()
         return render(request, 'login.html', {'form': loginform})
 
+# Visualizzabile solo dagli User in quanto sono gli unici che possono prenotare
 def RiepilogoPrenotazione(request):
-    print("riepilogoprenotazione")
-    if not request.user.is_authenticated():
-        print("non autenticato")
-        if request.method == "POST":
-            print("non autenticato post")
-            request.session['id_hotel'] = int(request.POST['id_hotel'])
-            request.session['id'] = int(request.POST['id'])
-            request.session['data_arrive'] = request.POST['data_arrive']
-            request.session['data_leave'] = request.POST['data_leave']
-            print("salvato in sessione")
-            return HttpResponseRedirect('/myBookingApp_2/login_2/')
-    else:
-        if request.method == "POST":
-            # checkin = request.session['data_arrive']
-            # checkout = request.session['data_leave']
-            # new_idStanzaPrenotation = request.session['id']
-            print("sono autenticato e sono nella riepilogo")
-            id_hotel = request.POST['id_hotel']
-            id_camera = request.POST['id']
-            data_arrive = request.POST['data_arrive']
-            data_leave = request.POST['data_leave']
-            hotel = Hotel.objects.all().filter(id =id_hotel)
-            print(id, data_arrive, data_leave)
-            return render(request, 'riepilogoprenotazione.html',{'id_camera': id_camera, 'check_in': data_arrive, 'check_out': data_leave,'nome_stanza': id_camera, 'nome_hotel': hotel})
-        # DO STUFF
+    if request.user.groups.filter(name__in=["Utente"]).exists():
+        print("riepilogoprenotazione")
+        if not request.user.is_authenticated():
+            print("non autenticato")
+            if request.method == "POST":
+
+                request.session['id_hotel'] = int(request.POST['id_hotel'])
+                request.session['id'] = int(request.POST['id'])
+                request.session['data_arrive'] = request.POST['data_arrive']
+                request.session['data_leave'] = request.POST['data_leave']
+                return HttpResponseRedirect('/myBookingApp_2/login_2/')
         else:
-            print("else")
+            if request.method == "POST":
+                # checkin = request.session['data_arrive']
+                # checkout = request.session['data_leave']
+                # new_idStanzaPrenotation = request.session['id']
+                print("sono autenticato e sono nella riepilogo")
+                id_hotel = request.POST['id_hotel']
+                id_camera = request.POST['id']
+                data_arrive = request.POST['data_arrive']
+                data_leave = request.POST['data_leave']
+                hotel = Hotel.objects.all().filter(id =id_hotel)
+                print(id, data_arrive, data_leave)
+                return render(request, 'riepilogoprenotazione.html',{'id_camera': id_camera, 'check_in': data_arrive, 'check_out': data_leave,'nome_stanza': id_camera, 'nome_hotel': hotel})
+            # DO STUFF
+            else:
+                print("else")
+    else:
+        return render(request,'accessonegato.html')
 
-
+#Eseguibile solo da chi possiede i permessi User
 def AggiungiPrenotazione(request):
-
-    room = Stanza.objects.all()
-    new_idStanzaPrenotation = int(request.POST['id'])
-    new_userPrenotation = request.user.id
-    date_arrive = request.POST['data_arrive']
-    date_leave = request.POST['data_leave']
-    obj = Prenotazioni.objects.get_or_create(id_stanza=get_object_or_404(Stanza,pk=new_idStanzaPrenotation), id_user=get_object_or_404(User,pk=new_userPrenotation), check_in=date_arrive, check_out=date_leave)
-    return render(request, 'successoprenotazione.html')
+    if request.user.groups.filter(name__in=["Utente"]).exists():
+        room = Stanza.objects.all()
+        new_idStanzaPrenotation = int(request.POST['id'])
+        new_userPrenotation = request.user.id
+        date_arrive = request.POST['data_arrive']
+        date_leave = request.POST['data_leave']
+        obj = Prenotazioni.objects.get_or_create(id_stanza=get_object_or_404(Stanza,pk=new_idStanzaPrenotation), id_user=get_object_or_404(User,pk=new_userPrenotation), check_in=date_arrive, check_out=date_leave)
+        return render(request, 'successoprenotazione.html')
+    else:
+        return render(request, 'accessonegato.html')
 

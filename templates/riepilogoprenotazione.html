@@ -1,39 +1,49 @@
-{% extends "base.html" %}
+{% extends "base2.html" %}
 
+{% block header %}
+    <head>
+        {% load staticfiles %}
+        <title> {% block title %}Search result{% endblock %} </title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
+        <style>
+        body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
+        </style>
+    </head>
+        <!-- Navigation Bar -->
+    <div class="w3-bar w3-large navbar-base">
+        <a href="/myBookingApp_2/search" class="w3-bar-item w3-button nav-b wht-text w3-mobile"><i class="fa fa-bed w3-margin-right"></i>MyBookingApp</a>
+{#            <a href="#about" class="w3-bar-item wht-text w3-button w3-mobile">About</a>#}
+{#            <a href="#contact" class="w3-bar-item w3-button wht-text w3-mobile">Contact</a>#}
+        {% if user.is_authenticated %}
+            <a href="http://127.0.0.1:8000/myBookingApp_2/logout" class="w3-bar-item w3-button nav-b wht-text w3-mobile w3-right"  >Logout</a>
+            <a href="http://127.0.0.1:8000/myBookingApp_2/userpage" class="w3-bar-item w3-button nav-b wht-text w3-mobile w3-right" >{{ user.username }}</a>
+        {% else %}
+            <a href="http://127.0.0.1:8000/myBookingApp_2/login" class="w3-bar-item w3-button nav-b wht-text w3-right w3-mobile">Login</a>
+            <a class="w3-bar-item w3-button w3-right w3-mobile nav-b wht-text">Anonymous</a>
+        {% endif %}
+    </div>
 
-<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
+    <header class="w3-display-container w3-content" style="max-width:1500px;">
+            <img src="{% static "/images/pagina_iniziale/confermaprenotazione.jpg"%}"  height="70%" width="100%" alt="The Hotel" >
+    </header>
 
-{#<header>#}
-{#    <div style="color: #eee; margin: auto; width: 100%; background: rgba(30, 30, 30, 0.7); padding-top: 5px; padding-bottom: 5px;">#}
-{#        <ul>#}
-{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/search">Location list</a></li>#}
-{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/vote">My Vote</a></li>#}
-{#        </ul>#}
-{#        <ur>#}
-{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/">Home</a></li>#}
-{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/creahotel"> Add Location</a></li>#}
-{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/creastanza"> Add Room</a></li>#}
-{#        </ur>#}
-{##}
-{#        <h1>User: {{ user.username }}</h1>#}
-{#    </div>#}
-{#</header>#}
-
-<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
-
+{% endblock%}
 
 {% block content %}
 <nav>
-    <h1 style="font-size: 300%;">Riepilogo prenotazione:</h1>
+    <h1 style="font-size: 300%;color: white">Riepilogo prenotazione:</h1>
 </nav>
     {% for h in nome_hotel %}
-
          <table style="width:100%">
-                <p> 
                     <tr>
                         <td>
-                            <div class="prenotations" style="background-color: orangered">
+                            <div class="prenotations wht-text" style="background-color: ">
                                 <p><h2>Hotel: {{h.nome}}</h2></p>
                                 <p><h2>Stanza: {{nome_stanza}}</h2></p>
                                 <p><h2>Città: {{h.citta}}</h2></p>
@@ -55,13 +65,6 @@
 
                         </td>
                     </tr>
-                </p>
         </table>
     {% endfor %}
 {% endblock %}
-<footer>
-    <em>scisoacsacoakocak</em>
-</footer>
-<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
-</body>
-</html>

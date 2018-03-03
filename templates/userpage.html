@@ -1,92 +1,109 @@
-{% extends "base.html" %}
+{% extends "base2.html" %}
 
+{% block header %}
+    <head>
+        {% load staticfiles %}
+        <title> {% block title %}Search result{% endblock %} </title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
+        <style>
+        body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
+        </style>
+    </head>
+        <!-- Navigation Bar -->
+    <div class="w3-bar w3-large navbar-base">
+        <a href="/myBookingApp_2/search" class="w3-bar-item w3-button nav-b wht-text w3-mobile"><i class="fa fa-bed w3-margin-right"></i>MyBookingApp</a>
 
-<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
+        {% if user.is_authenticated %}
+            <a href="http://127.0.0.1:8000/myBookingApp_2/logout" class="w3-bar-item w3-button nav-b wht-text w3-mobile w3-right"  >Logout</a>
+            <a href="http://127.0.0.1:8000/myBookingApp_2/userpage" class="w3-bar-item w3-button nav-b wht-text w3-mobile w3-right" >{{ user.username }}</a>
+        {% else %}
+            <a href="http://127.0.0.1:8000/myBookingApp_2/login" class="w3-bar-item w3-button nav-b wht-text w3-right w3-mobile">Login</a>
+            <a class="w3-bar-item w3-button w3-right w3-mobile nav-b wht-text">Anonymous</a>
+        {% endif %}
+    </div>
 
-{#<header>#}
-{#    <div style="color: #eee; margin: auto; width: 100%; background: rgba(30, 30, 30, 0.7); padding-top: 5px; padding-bottom: 5px;">#}
-{#        <ul>#}
-{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/search">Location list</a></li>#}
-{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/vote">My Vote</a></li>#}
-{#        </ul>#}
-{#        <ur>#}
-{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/">Home</a></li>#}
-{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/creahotel"> Add Location</a></li>#}
-{#            <li><a href="http://127.0.0.1:8000/myBookingApp_2/creastanza"> Add Room</a></li>#}
-{#        </ur>#}
-{##}
-{#        <h1>User: {{ user.username }}</h1>#}
-{#    </div>#}
-{#</header>#}
+    <header class="w3-display-container w3-content" style="max-width:1500px;">
+            <img src="{% static "/images/pagina_iniziale/wishlist.jpeg"%}"  height="70%" width="100%" alt="The Hotel" >
+    </header>
 
-<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
-
+{% endblock%}
 
 {% block content %}
-<nav>
-    <h1 style="font-size: 300%;">Prenotations:</h1>
-</nav>
-     <table style="width:100%">
-        {% for p in prenotazioni %}
-            <p> 
-                <tr>
-                    <td>
-                        <div class="prenotations" style="background-color: orangered">
-                            <p><h2>Hotel: {{p.id_stanza.id_hotel}}</h2></p>
-                            <p><h2>Stanza: {{p.id_stanza}}</h2></p>
-                            <p><h2>Utente Prenotazione: {{p.id_user}}</h2></p>
-                            <p><h2>Check_in: {{p.check_in}}</h2></p>
-                            <p><h2>Check_out: {{p.check_out}}</h2></p>
-                            </p>
-                        </div>
-                    </td>
-                </tr>
-            </p>
-        {% endfor %}
-    </table>
-
-
-<nav>
-    <h1 style="font-size: 300%;">Preferite:</h1>
-</nav>
-
-
-    <table style="width:100%">
-        {% for p in preferite %}
-            <p> 
-                <tr>
-                    <td>
-                        <div class="preferite" style="background-color: limegreen">
-                            <p><h2>Hotel: {{p.stanza_preferita.id_hotel.nome}}</h2></p>
-                            <p><h2>Stanza: {{p.stanza_preferita.num_camera}}</h2></p>
-                            <p><h2>Città: {{p.stanza_preferita.id_hotel.citta}}</h2></p>
-
-{#                            <p><h2>Utente Prenotazione: {{p.stanza_preferita.}}</h2></p>#}
-{#                            <p><h2>Check_in: {{p.check_in}}</h2></p>#}
-{#                            <p><h2>Check_out: {{p.check_out}}</h2></p>#}
-                            </p>
-                        </div>
-                    </td>
-                </tr>
-            </p>
-        {% endfor %}
-    </table>
-
-
-
-
-
-
-<nav>
-    <h1 style="font-size: 300%;">Whishlist:</h1>
-</nav>
-    <table style="width:100%">
-            {% for p in lista_attesa %}
-                <p> 
+    {% if visible %}
+        <div style="text-align: center">
+            <h1 class="wht-text">Pagina direzione</h1>
+            <br>
+            <a href="/myBookingApp_2/creahotel/">
+                <input type="button" value="Aggiungi Hotel">
+            </a>
+            <a href="/myBookingApp_2/creastanza/">
+                <input type="button" value="Aggiungi Stanza">
+            </a>
+        </div>
+    {% else %}
+        <nav>
+            <h1 style="font-size: 300%;color: white">Prenotations:</h1>
+        </nav>
+        <table style="width:100%">
+            {% if prenotazioni %}
+                {% for p in prenotazioni %}
                     <tr>
                         <td>
-                            <div class="lista_attesa" style="background-color: yellow">
+                            <div class="well" style="background-color: #ccbb99">
+                                <p><h2>Hotel: {{p.id_stanza.id_hotel}}</h2></p>
+                                <p><h2>Stanza: {{p.id_stanza}}</h2></p>
+                                <p><h2>Utente Prenotazione: {{p.id_user}}</h2></p>
+                                <p><h2>Check_in: {{p.check_in}}</h2></p>
+                                <p><h2>Check_out: {{p.check_out}}</h2></p>
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else%}
+              <h3 style="text-align: center;color: white;font-weight: bold;padding-bottom: 20px">Nessuna prenotazione trovata</h3>
+            {% endif %}
+        </table>
+
+
+        <nav>
+            <h1 style="font-size: 300%;color: white">Preferite:</h1>
+        </nav>
+
+
+        <table style="width:100%">
+            {% if preferite %}
+                {% for p in preferite %}
+                    <tr>
+                        <td>
+                            <div class="well" style="background-color: #ccbb99">
+                                <p><h2>Hotel: {{p.stanza_preferita.id_hotel.nome}}</h2></p>
+                                <p><h2>Stanza: {{p.stanza_preferita.num_camera}}</h2></p>
+                                <p><h2>Città: {{p.stanza_preferita.id_hotel.citta}}</h2></p>
+                            </div>
+                        </td>
+                    </tr>
+            {% endfor %}
+            {% else%}
+                  <h3 style="text-align: center;color: white;font-weight: bold;padding-bottom: 20px">Nessuna prenotazione trovata</h3>
+             {% endif %}
+        </table>
+
+        <nav>
+            <h1 style="font-size: 300%;color: white">Whishlist:</h1>
+        </nav>
+        <table style="width:100%">
+            {% if lista_attesa %}
+                {% for p in lista_attesa %}
+                    <tr>
+                        <td>
+                            <div class="well" style="background-color: #ccbb99">
                                 <p><h2>Hotel: {{p.lista_attesa.id_hotel}}</h2></p>
                                 <p><h2>Stanza: {{p.lista_attesa.num_camera}}</h2></p>
 
@@ -94,75 +111,14 @@
                             </div>
                         </td>
                     </tr>
-                </p>
-            {% endfor %}
-    </table>
-{% endblock %}
+                {% endfor %}
+            {% else%}
+                  <h3 style="text-align: center;color: white;font-weight: bold;padding-bottom: 20px">Nessuna camera in lista d'attesa</h3>
+             {% endif %}
+        </table>
 
-<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
-{#<aside>#}
-{#    <table style="width:100%">#}
-{#        {% for p in RoomFavorite %}#}
-{#            <p> #}
-{#                <tr>#}
-{#                    <td>#}
-{#                        <div class="favorites">#}
-{#                            <p><h2>Location: {{p.room_favorite.id_location.name}}</h2></p>#}
-{#                            {{ p.room_favorite.id_location.description }}#}
-{#                            <hr>#}
-{#                            <p>Room number: {{p.room_favorite.number_room}}</p>#}
-{#                            <hr>#}
-{#                            <p><h4>Location position:</h4></p>#}
-{#                            <p>{{ p.room_favorite.id_location.address }} - {{ p.room_favorite.id_location.municipality }} - {{ p.room_favorite.id_location.city }} - {{ p.room_favorite.id_location.country }}</p>#}
-{#                            <p><a href="{{p.room_favorite.id_location.site_web}}">Site web {{p.room_favorite.id_location.name}}</a></p>#}
-{#                            <form action="/TravelBook/" method="POST">#}
-{#                                {% csrf_token %}#}
-{#                                <input type="Submit" name="SubmitDeleteFavorite" value="Delete from favorites" onclick=DeleteFavoriteEvent()>#}
-{#                                <input type="hidden" name="FavoriteId" value={{p.id}}>#}
-{#                            </form>#}
-{#                        </div>#}
-{#                    </td>#}
-{#                </tr>#}
-{#            </p>#}
-{#        {% endfor %}#}
-{#    </table>#}
-{#</aside>#}
-<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
-<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
-{#<maction>#}
-{#    <table style="width:100%">#}
-{#        {% for p in RoomWaitingList %}#}
-{#            <p> #}
-{#                <tr>#}
-{#                    <td>#}
-{#                        <div class="waiting_list">#}
-{#                            <p><h2>Location: {{p.room_waiting_list.id_location.name}}</h2></p>#}
-{#                            {{ p.room_waiting_list.id_location.description }}#}
-{#                            <hr>#}
-{#                            <p>Room number: {{p.room_waiting_list.number_room}}</p>#}
-{#                            <hr>#}
-{#                            <p>User booked: {{ p.user_reservetion }}</p>#}
-{#                            <p>User attend: {{ p.user_waiting_list }}</p>#}
-{#                            <hr>#}
-{#                            <p><h4>Location position:</h4></p>#}
-{#                            <p>{{ p.room_waiting_list.id_location.address }} - {{ p.room_waiting_list.id_location.municipality }} - {{ p.room_waiting_list.id_location.city }} - {{ p.room_waiting_list.id_location.country }}</p>#}
-{#                            <p><a href="{{p.room_waiting_list.id_location.site_web}}">Site web {{p.room_waiting_list.id_location.name}}</a></p>#}
-{#                            <form action="/TravelBook/" method="POST">#}
-{#                                {% csrf_token %}#}
-{#                                <input type="Submit" name="SubmitDeleteWaitingList" value="Delete from waiting list" onclick=DeleteWaitingList()>#}
-{#                                <input type="hidden" name="WaitingListId" value={{p.id}}>#}
-{#                            </form>#}
-{#                        </div>#}
-{#                    </td>#}
-{#                </tr>#}
-{#            </p>#}
-{#        {% endfor %}#}
-{#    </table>#}
-{#</maction>#}
-<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
-<footer>
-    <em>scisoacsacoakocak</em>
-</footer>
-<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
-</body>
-</html>
+
+    {% endif %}
+
+
+{% endblock %}

@@ -21,15 +21,19 @@ class SearchHotelForm(forms.Form):
     camera_fumatori = forms.BooleanField(initial=False, required=False)
     animali = forms.BooleanField(initial=False, required=False)
 
-class AddRoomForm(forms.Form):
-    nome = forms.IntegerField(widget=forms.Select(choices=[(hotel.nome) for hotel in Hotel.objects.all()]),required=True)
-    num_camera = forms.IntegerField(required=True,)
-    prezzo = forms.FloatField(required=True)
-    prezzo_festivita = forms.FloatField(required=True)
-    num_persone = forms.IntegerField(min_value=1,required=True)
-    aria_condizionata = forms.BooleanField(initial=False, required=False)
-    camera_fumatori = forms.BooleanField(initial=False, required=False)
-    animali = forms.BooleanField(initial=False, required=False)
+class AddRoomForm(forms.ModelForm):
+    class Meta:
+        model = Stanza
+        fields = ('id_hotel', 'num_camera','prezzo','num_persone','prezzo_festivita', 'aria_condizionata','camera_fumatori','animali')
+
+    # nome = forms.IntegerField(widget=forms.Select(choices=[(hotel.nome) for hotel in Hotel.objects.all()]),required=True)
+    # num_camera = forms.IntegerField(required=True,)
+    # prezzo = forms.FloatField(required=True)
+    # prezzo_festivita = forms.FloatField(required=True)
+    # num_persone = forms.IntegerField(min_value=1,required=True)
+    # aria_condizionata = forms.BooleanField(initial=False, required=False)
+    # camera_fumatori = forms.BooleanField(initial=False, required=False)
+    # animali = forms.BooleanField(initial=False, required=False)
 
 class AddHotelForm(forms.ModelForm):
     class Meta:
@@ -48,6 +52,7 @@ class AddHotelForm(forms.ModelForm):
     # palestra = forms.BooleanField(initial=False, required=False)
     # bar = forms.BooleanField(initial=False, required=False)
     # spa = forms.BooleanField(initial=False, required=False)
+
 class AddVoto(forms.ModelForm):
     hotel_id = forms.IntegerField(widget=forms.Select(choices=[(hotel.nome) for hotel in Hotel.objects.all()]),required=True)
     user_vote = forms.IntegerField(widget=forms.Select(choices=[(User.username) for User in User.objects.all()]),required=True)
@@ -69,7 +74,6 @@ class AddToListaAttesa(forms.ModelForm):
 
 
 class RegistrationForm(forms.Form):
-
     username = forms.RegexField(regex=r'^\w+$', widget=forms.TextInput(attrs=dict(required=True, max_length=30)), label=("Username"), error_messages={ 'invalid': ("This value must contain only letters, numbers and underscores.") })
     email = forms.EmailField(widget=forms.TextInput(attrs=dict(required=True, max_length=30)), label=("Email address"))
     password1 = forms.CharField(widget=forms.PasswordInput(attrs=dict(required=True, max_length=30, render_value=False)), label=("Password"))
@@ -89,8 +93,8 @@ class RegistrationForm(forms.Form):
         return self.cleaned_data
 
 class LoginForm(forms.Form):
-    Username = forms.CharField(max_length=30, required=True, help_text='Optional.')
-    Password = forms.CharField(max_length=30, required=True, help_text='Optional.')
+    Username = forms.CharField(max_length=30, required=True)
+    Password = forms.CharField(max_length=30, required=True)
 
     class Meta:
         model = User

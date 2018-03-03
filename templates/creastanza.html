@@ -1,23 +1,48 @@
-{% extends "base.html" %}
+{% extends "base2.html" %}
 
-{% block title %}Creazione stanza  {% endblock %}
+{% block title %}Creazione Stanza  {% endblock %}
+
+{% block style %}
+    <style>
+        .navbar-base {
+            background-color: #223445;
+        }
+        .wht-text
+        {
+            color: whitesmoke!important;
+        }
+
+        .nav-b {
+            color: #fff!important;
+            background-color: #ccbb99!important;
+        }
+
+        .footer-bkg{
+            background-color: #ccbb99!important;
+        }
+        label {
+            cursor: default;
+            color: white
+        }
+        .footer {
+
+            margin-top: -50px;
+        }
+    </style>
+{% endblock%}
 
 {% block content %}
-    <div class="Container" align="left" style="background-color: #4cfe2d;padding: 10px">
+    <div class="well " align="center" style="background-color: #ccbb99;padding: 10px" >
         <form action="." method="POST">
             {% csrf_token %}
-            {% for i in form_aggiungi_stanza %}
-                <label for="email">{{ i.name}}</label>
-                {{ i}}
-                <br>
-            {% endfor %}
-            {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
+                {{form_aggiungi_stanza.as_p }}
+{#            {% if messages %}#}
+{#                <ul class="messages">#}
+{#                    {% for message in messages %}#}
+{#                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>#}
+{#                    {% endfor %}#}
+{#                </ul>#}
+{#            {% endif %}#}
 {#            {{ form_aggiungi_stanza.as_p }}#}
             <input type="Submit" name="Submit" value="Aggiungi">
         </form>
