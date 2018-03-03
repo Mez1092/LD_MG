@@ -62,6 +62,30 @@
                                 <p><h2>Check_in: {{p.check_in}}</h2></p>
                                 <p><h2>Check_out: {{p.check_out}}</h2></p>
                                 </p>
+
+                                {% if p.check_out.year <= current_date.year and p.check_out.month <= current_date.month and p.check_out.day <= current_date.day %}
+
+                                    <h2>Vote your holiday:</h2>
+                                            <form action="/myBookingApp_2/votazione/" method="POST">
+                                                {% csrf_token %}
+
+                                                <input type="number" name="stelle" value="1" min="1" max="5">
+                                                <input type="Submit" name="SubmitVote" value="Vote" id="mySubmitVote"><br><br>
+                                                <input type="hidden" name="HotelID" value={{ p.id_stanza.id_hotel_id }}>
+                                            </form>
+                            {% endif%}
+
+                                    <form action="/myBookingApp_2/cancellaprenotazione/" method="post">
+                                        {% csrf_token %}
+
+                                            <input type="hidden" name="IdPrenotazione" value={{p.id}}>
+{#                                            <input type="hidden" name="data_checkin" value={{p.check_in}}>#}
+{#                                            <input type="hidden" name="data_checkout" value={{p.check_out}}>#}
+
+                                            <input type="Submit" name="CancellaPrenotazione" value="Cancella Prenotazione">
+
+
+                                    </form>
                             </div>
                         </td>
                     </tr>
@@ -72,35 +96,12 @@
         </table>
 
 
-        <nav>
-            <h1 style="font-size: 300%;color: white">Preferite:</h1>
-        </nav>
-
-
-        <table style="width:100%">
-            {% if preferite %}
-                {% for p in preferite %}
-                    <tr>
-                        <td>
-                            <div class="well" style="background-color: #ccbb99">
-                                <p><h2>Hotel: {{p.stanza_preferita.id_hotel.nome}}</h2></p>
-                                <p><h2>Stanza: {{p.stanza_preferita.num_camera}}</h2></p>
-                                <p><h2>Città: {{p.stanza_preferita.id_hotel.citta}}</h2></p>
-                            </div>
-                        </td>
-                    </tr>
-            {% endfor %}
-            {% else%}
-                  <h3 style="text-align: center;color: white;font-weight: bold;padding-bottom: 20px">Nessuna prenotazione trovata</h3>
-             {% endif %}
-        </table>
-
-        <nav>
-            <h1 style="font-size: 300%;color: white">Whishlist:</h1>
-        </nav>
-        <table style="width:100%">
-            {% if lista_attesa %}
-                {% for p in lista_attesa %}
+<nav>
+    <h1 style="font-size: 300%;">Whishlist:</h1>
+</nav>
+    <table style="width:100%">
+        {% if lista_attesa %}
+            {% for p in lista_attesa %}
                     <tr>
                         <td>
                             <div class="well" style="background-color: #ccbb99">
@@ -108,17 +109,27 @@
                                 <p><h2>Stanza: {{p.lista_attesa.num_camera}}</h2></p>
 
                                 </p>
+
+                                        <form action="/myBookingApp_2/cancellawishlist/" method="post">
+                                            {% csrf_token %}
+
+                                                <input type="hidden" name="IdWishlist" value={{p.id}}>
+    {#                                            <input type="hidden" name="data_checkin" value={{p.check_in}}>#}
+    {#                                            <input type="hidden" name="data_checkout" value={{p.check_out}}>#}
+
+                                                <input type="Submit" name="CancellaWishlist" value="Cancella Wishlist">
+
+
+                                        </form>
+
                             </div>
                         </td>
                     </tr>
-                {% endfor %}
-            {% else%}
-                  <h3 style="text-align: center;color: white;font-weight: bold;padding-bottom: 20px">Nessuna camera in lista d'attesa</h3>
-             {% endif %}
-        </table>
 
-
+            {% endfor %}
+        {% else%}
+          <h3 style="text-align: center;color: white;font-weight: bold;padding-bottom: 20px">Nessuna camera in lista d'attesa</h3>
+        {% endif %}
+    </table>
     {% endif %}
-
-
 {% endblock %}

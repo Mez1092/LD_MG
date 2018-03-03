@@ -16,6 +16,10 @@ urlpatterns = [
     url(r'^userpage/',views.userpage,name='user'),
 	url(r'^registrazioneutente/',views.register_user,name='registrazioneutente'),
     url(r'^prenota/',views.AggiungiPrenotazione, name='aggiungiprenotazione'),
+    url(r'^cancellaprenotazione/', views.CancellaPrenotazione, name='cancellaprenotazione'),
+    url(r'^cancellawishlist/', views.CancellaWishlist, name='cancellawishlist'),
+    url(r'^votazione/', views.Votazione, name='votazione'),
+    url(r'^wishlist/', views.AggiungiAWishlist, name='aggiungiawishlist'),
     url(r'^registrazionegestore/',views.register_gestore,name='registrazionegestore')
 
 ]

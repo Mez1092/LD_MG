@@ -60,15 +60,15 @@ class AddVoto(forms.ModelForm):
 
 
 
-class AddStanzaPreferita(forms.ModelForm):
-    stanza_preferita = forms.IntegerField(widget=forms.Select(choices=[(stanza.num_camera) for stanza in Stanza.objects.all()]),required=True)
-    user_id = forms.IntegerField(widget=forms.Select(choices=[(User.username) for User in User.objects.all()]),required=True)
+# class AddStanzaPreferita(forms.ModelForm):
+#     stanza_preferita = forms.IntegerField(widget=forms.Select(choices=[(stanza.num_camera) for stanza in Stanza.objects.all()]),required=True)
+#     user_id = forms.IntegerField(widget=forms.Select(choices=[(User.username) for User in User.objects.all()]),required=True)
 
 
 class AddToListaAttesa(forms.ModelForm):
     lista_attesa = forms.IntegerField(widget=forms.Select(choices=[(stanza.num_camera) for stanza in Stanza.objects.all()]),required=True)
     user_id = forms.IntegerField(widget=forms.Select(choices=[(User.username) for User in User.objects.all()]),required=True)
-    user_prenotazione = forms.IntegerField(widget=forms.Select(choices=[(prenotazioni.id_user) for prenotazioni in Prenotazioni.objects.all()]),required=True)
+    # user_prenotazione = forms.IntegerField(widget=forms.Select(choices=[(prenotazioni.id_user) for prenotazioni in Prenotazioni.objects.all()]),required=True)
     check_in = forms.DateField(widget=forms.widgets.SelectDateWidget, initial=datetime.date.today())
     check_out = forms.DateField(widget=forms.widgets.SelectDateWidget, initial=datetime.date.today() + datetime.timedelta(days=1))
 
