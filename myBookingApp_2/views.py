@@ -353,7 +353,7 @@ def login_2(request):
 
 # Visualizzabile solo dagli User in quanto sono gli unici che possono prenotare
 def RiepilogoPrenotazione(request):
-    if request.user.groups.filter(name__in=["Utente"]).exists():
+
         print("riepilogoprenotazione")
         if not request.user.is_authenticated():
             print("non autenticato")
@@ -365,23 +365,25 @@ def RiepilogoPrenotazione(request):
                 request.session['data_leave'] = request.POST['data_leave']
                 return HttpResponseRedirect('/myBookingApp_2/login_2/')
         else:
-            if request.method == "POST":
-                # checkin = request.session['data_arrive']
-                # checkout = request.session['data_leave']
-                # new_idStanzaPrenotation = request.session['id']
-                print("sono autenticato e sono nella riepilogo")
-                id_hotel = request.POST['id_hotel']
-                id_camera = request.POST['id']
-                data_arrive = request.POST['data_arrive']
-                data_leave = request.POST['data_leave']
-                hotel = Hotel.objects.all().filter(id =id_hotel)
-                print(id, data_arrive, data_leave)
-                return render(request, 'riepilogoprenotazione.html',{'id_camera': id_camera, 'check_in': data_arrive, 'check_out': data_leave,'nome_stanza': id_camera, 'nome_hotel': hotel})
+            if request.user.groups.filter(name__in=["Utente"]).exists():
+                if request.method == "POST":
+                    # checkin = request.session['data_arrive']
+                    # checkout = request.session['data_leave']
+                    # new_idStanzaPrenotation = request.session['id']
+                    print("sono autenticato e sono nella riepilogo")
+                    id_hotel = request.POST['id_hotel']
+                    id_camera = request.POST['id']
+                    data_arrive = request.POST['data_arrive']
+                    data_leave = request.POST['data_leave']
+                    hotel = Hotel.objects.all().filter(id =id_hotel)
+                    print(id, data_arrive, data_leave)
+                    return render(request, 'riepilogoprenotazione.html',{'id_camera': id_camera, 'check_in': data_arrive, 'check_out': data_leave,'nome_stanza': id_camera, 'nome_hotel': hotel})
             # DO STUFF
+                else:
+                    print("else")
             else:
-                print("else")
-    else:
-        return render(request,'accessonegato.html')
+                return render(request, 'accessonegato.html')
+
 
 #Eseguibile solo da chi possiede i permessi User
 def AggiungiPrenotazione(request):
