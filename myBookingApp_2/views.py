@@ -26,9 +26,8 @@ def userpage(request):
         current_date = datetime.date.today()
         current_user = request.user
         prenotation = Prenotazioni.objects.all().filter(id_user=current_user)
-        preferite = Stanzapreferita.objects.all().filter(user_id=current_user)
         lista_attesa = ListaAttesaStanza.objects.all().filter(user_id=current_user)
-        return render(request, 'userpage.html', {"prenotazioni": prenotation, "preferite": preferite, "lista_attesa": lista_attesa, 'visible' : False, "current_date": current_date})
+        return render(request, 'userpage.html', {"prenotazioni": prenotation, "lista_attesa": lista_attesa, 'visible' : False, "current_date": current_date})
     else:
         return render(request, 'userpage.html', {'visible' : True})
 
@@ -453,7 +452,7 @@ def Votazione(request):
         return HttpResponseRedirect('/myBookingApp_2/userpage')
 
     except IntegrityError as e:
-        messages.info(request, 'Voto già espresso per questa struttura!')
+        messages.info(request, 'Voto gia espresso per questa struttura!')
         return HttpResponseRedirect('/myBookingApp_2/userpage')
 
 
