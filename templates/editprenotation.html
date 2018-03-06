@@ -1,0 +1,47 @@
+{% extends "base2.html" %}
+
+{% block content %}
+<nav>
+    <h1 class="wht-text"style="font-size: 300%;">Modifica Prenotazione:</h1>
+</nav>
+
+   <div class="well" align="center" style="background-color: #ccbb99" >
+        <form action="/myBookingApp_2/updateeditprenotazione/" method="POST">
+            {% csrf_token %}
+                {{form_editprenotazione.as_p }}
+            <input type="hidden" name="IdPrenotazione" value={{prenotazione_modificata}}>
+
+            <input type="Submit" name="UpdateConfermaModifica" value="Conferma Modifica">
+        </form>
+
+
+{##}
+{##}
+{#    <div class="prenotations" style="background-color: orangered">#}
+{#        <p><h2>Hotel: {{h.nome}}</h2></p>#}
+{#        <p><h2>Stanza: {{nome_stanza}}</h2></p>#}
+{#        <p><h2>Città: {{h.citta}}</h2></p>#}
+{#        <p><h2>indirizzo: {{h.indirizzo}}</h2></p>#}
+{#        <p><h2>Utente Prenotazione: {{user}}</h2></p>#}
+{#        <p><h2>Check_in: {{check_in}}</h2></p>#}
+{#        <p><h2>Check_out: {{check_out}}</h2></p>#}
+{#        </p>#}
+{#    </div>#}
+{#        <form action="/myBookingApp_2/updateeditprenotazione/" method="post">#}
+{#            {% csrf_token %}#}
+{#            <input type="hidden" name="id_hotel" value={{h.id}}>#}
+{#            <input type="hidden" name="IdPrenotazione" value={{prenotazione_modificata}}>#}
+{#            <input type="hidden" name="check_in" value={{ check_in.day }}>#}
+    {#        <input type="hidden" name="check_out" value={{ form_editprenotazione.check_out }}>#}
+
+
+{#            <input type="Submit" name="UpdateConfermaModifica" value="Conferma Modifica">#}
+{#        </form>#}
+    </div>
+{% endblock %}
+<footer>
+    <em>scisoacsacoakocak</em>
+</footer>
+<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
+</body>
+</html>

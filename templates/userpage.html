@@ -17,7 +17,7 @@
     </head>
         <!-- Navigation Bar -->
     <div class="w3-bar w3-large navbar-base">
-        <a href="/myBookingApp_2/search" class="w3-bar-item w3-button nav-b wht-text w3-mobile"><i class="fa fa-bed w3-margin-right"></i>MyBookingApp</a>
+        <a href="/myBookingApp_2/" class="w3-bar-item w3-button nav-b wht-text w3-mobile"><i class="fa fa-bed w3-margin-right"></i>MyBookingApp</a>
 
         {% if user.is_authenticated %}
             <a href="http://127.0.0.1:8000/myBookingApp_2/logout" class="w3-bar-item w3-button nav-b wht-text w3-mobile w3-right"  >Logout</a>
@@ -79,25 +79,35 @@
                                         {% csrf_token %}
 
                                             <input type="hidden" name="IdPrenotazione" value={{p.id}}>
-{#                                            <input type="hidden" name="data_checkin" value={{p.check_in}}>#}
-{#                                            <input type="hidden" name="data_checkout" value={{p.check_out}}>#}
 
                                             <input type="Submit" name="CancellaPrenotazione" value="Cancella Prenotazione">
 
 
                                     </form>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-            {% else%}
+
+                                    <form action="/myBookingApp_2/editprenotazione/" method="post">
+                                        {% csrf_token %}
+
+                                            <input type="hidden" name="IdPrenotazione" value={{p.id}}>
+                                            <input type="hidden" name="data_checkin" value={{p.check_in}}>
+                                            <input type="hidden" name="data_checkout" value={{p.check_out}}>
+
+
+                                            <input type="Submit" name="ModificaPrenotazione" value="Modifica Prenotazione">
+
+
+                                    </form>                        </div>
+                    </td>
+                </tr>
+
+        {% endfor %}{% else%}
               <h3 style="text-align: center;color: white;font-weight: bold;padding-bottom: 20px">Nessuna prenotazione trovata</h3>
             {% endif %}
-        </table>
+    </table>
 
 
 <nav>
-    <h1 style="font-size: 300%;">Whishlist:</h1>
+    <h1 style="font-size: 300%;Color: White">Wishlist:</h1>
 </nav>
     <table style="width:100%">
         {% if lista_attesa %}

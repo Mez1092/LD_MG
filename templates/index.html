@@ -1,57 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+{% extends "base2.html" %}
 
-<body>
-    {% if stanze %}
-    <ul>
-        {% for stanza in stanze %}
-            <li>
-                <a href="/hotel/{{ hotel.nome }}/">{{ stanza.num_camera }}- {{ stanza.id_hotel }} - {{ stanza.aria_condizionata  }}</a>
-            </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p>No hotels are available.</p>
-    {% endif %}
+{% block header %}
+    <head>
+        {% load staticfiles %}
+        <title> {% block title %}Search result{% endblock %} </title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-<table style="width:100%">
-{% if hotels %}
-        {% for l in hotels %}
-                <tr>
-                    <td>
-                        <div class="hotels">
-                            <h2>{{l.nome}}</h2>  
-                            <p>{{l.nome}} {{l.descrizione}}
-                            <hr>
-                            <p> {{l.indirizzo}} -
-                                {{l.città}} -
-                                {{l.stato}} -
-                                {{l.telefono}}.
-                            </p>
-                            <p><a href="{{l.sito}}">{{l.sito}}</a></p>
+        <style>
+        body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}
+        </style>
+    </head>
+        <!-- Navigation Bar -->
+    <div class="w3-bar w3-large navbar-base">
+        <a href="/myBookingApp_2/" class="w3-bar-item w3-button nav-b wht-text w3-mobile"><i class="fa fa-bed w3-margin-right"></i>MyBookingApp</a>
 
-                            <p><h4>Features:</h4>
-                            <ul style="list-style-type:circle">
-                            <li>{% if l.piscina == True %} &#x221A {% else %} &#9747 {% endif %} Pool</li>
-                            <li>{% if l.WiFi == True %} &#x221A {% else %} &#9747 {% endif %} WiFi</li>
-                            <li>{% if l.accesso_disabili == True %} &#x221A {% else %} &#9747 {% endif %} Disabled services</li>
-                            <li>{% if l.ristorante == True %} &#x221A {% else %} &#9747 {% endif %} Resturant</li>
-                            <li>{% if l.parcheggio == True %} &#x221A {% else %} &#9747 {% endif %} Car parking</li>
-                            <li>{% if l.palestra == True %} &#x221A {% else %} &#9747 {% endif %} Gym</li>
-                            <li>{% if l.bar == True %} &#x221A {% else %} &#9747 {% endif %} Bar</li>
-                            <li>{% if l.spa == True %} &#x221A {% else %} &#9747 {% endif %} S.P.A</li>
-                            </ul>
-                            </p>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-{% endif %}
-</table>
-</body>
+        {% if user.is_authenticated %}
+            <a href="http://127.0.0.1:8000/myBookingApp_2/logout" class="w3-bar-item w3-button nav-b wht-text w3-mobile w3-right"  >Logout</a>
+            <a href="http://127.0.0.1:8000/myBookingApp_2/userpage" class="w3-bar-item w3-button nav-b wht-text w3-mobile w3-right" >{{ user.username }}</a>
+        {% else %}
+            <a href="http://127.0.0.1:8000/myBookingApp_2/login" class="w3-bar-item w3-button nav-b wht-text w3-right w3-mobile">Login</a>
+            <a class="w3-bar-item w3-button w3-right w3-mobile nav-b wht-text">Anonymous</a>
+        {% endif %}
+    </div>
 
-</html>
+    <header class="w3-display-container w3-content" style="max-width:1500px;">
+            <img src="{% static "/images/pagina_iniziale/wishlist.jpeg"%}"  height="70%" width="100%" alt="The Hotel" >
+    </header>
+
+{% endblock%}
+{% block content %}
+        <div style="text-align: center">
+            <br>
+            <a href="myBookingApp_2/">
+                <input type="button" value="MyBookingApp">
+            </a>
+            <a href="admin/">
+                <input type="button" value="Admin">
+            </a>
+        </div>
+
+{% endblock%}

@@ -88,7 +88,7 @@ DATABASES = {
 
         'OPTIONS': {
             'sql_mode':'STRICT_TRANS_TABLES',
-            'read_default_file':'C:\Users\stefano\Desktop\Test\Booking_2\Booking_2\db.config',
+            'read_default_file':'/home/marco/Desktop/LD_Greg_Mezz/Booking_2/Booking_2/db.config',
         }
 
     }
@@ -129,6 +129,20 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+
+# setting for send email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'ma.mezzetti@gmail.com'
+EMAIL_HOST_PASSWORD = 'alexpato'
+EMAIL_PORT = 587
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),

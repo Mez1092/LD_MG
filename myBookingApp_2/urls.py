@@ -4,8 +4,8 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
-    url(r'^search/', views.search,name= 'search'),
+    url(r'^$', views.search,name= 'search'),
+    # url(r'^search/', views.search,name= 'search'),
     url(r'^creastanza/', views.creastanza,name= 'creastanza'),
     url(r'^creahotel/', views.creahotel,name= 'creahotel'),
     # url(r'^creazioneavvenuta/', views.successocreazione, name='creazioneavvenuta'),
@@ -18,6 +18,8 @@ urlpatterns = [
     url(r'^prenota/',views.AggiungiPrenotazione, name='aggiungiprenotazione'),
     url(r'^cancellaprenotazione/', views.CancellaPrenotazione, name='cancellaprenotazione'),
     url(r'^cancellawishlist/', views.CancellaWishlist, name='cancellawishlist'),
+    url(r'^editprenotazione/', views.ModificaPrenotazione, name='modificaprenotazione'),
+    url(r'^updateeditprenotazione/', views.UpdateModificaPrenotazione, name='updatemodificaprenotazione'),
     url(r'^votazione/', views.Votazione, name='votazione'),
     url(r'^wishlist/', views.AggiungiAWishlist, name='aggiungiawishlist'),
     url(r'^registrazionegestore/',views.register_gestore,name='registrazionegestore')

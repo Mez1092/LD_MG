@@ -13,12 +13,15 @@ from django.shortcuts import get_object_or_404, render
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from .forms import *
+from django.core.mail import send_mail
+from django.conf import settings
+
 import datetime
 
-def index(request):
-    hotels = Hotel.objects.all()
-    stanze = Stanza.objects.all()
-    return render(request, 'index.html', {'hotels': hotels , "stanze" : stanze})
+# def index(request):
+#     hotels = Hotel.objects.all()
+#     stanze = Stanza.objects.all()
+#     return render(request, 'index.html', {'hotels': hotels , "stanze" : stanze})
 
 def userpage(request):
 
@@ -119,7 +122,6 @@ def search(request):
                     cin = stanza_prenotata.check_in.strftime(date_format)
                     cout = stanza_prenotata.check_out.strftime(date_format)
 
-                    # if data[0] <= cin and data[1] >= cin or data[0] >= cin and data[1] <= cout or data[0] <= cout and data[1] >= cout or data[0] <= cin and data[1] >= cout:
                     if (data[0] >= cin and data[0] <= cout) or (data[1] >= cin and data[1] <= cout) or (
                             data[0] <= cin and data[1] >= cout):
 
@@ -129,7 +131,6 @@ def search(request):
 
                     else:
                         print("Stanza Fuori Periodo: ", stanza_prenotata.id)
-                        # stanza_prenotata.delete()              #mi rimuove la stanza dal db, valutare alternative per rimuovere la stanza dall'elenco prenotazioni totali
 
                 return render(request, 'indexsearch.html',
                               {'data': data, 'risultati_hotel': Filtered_hotels, 'form_search': form_search_hotel,
@@ -261,7 +262,7 @@ def creahotel(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect('/myBookingApp_2/search/')
+    return HttpResponseRedirect('/myBookingApp_2/')
 
 #Eseguibile solo se non loggato
 def register_user(request):
@@ -271,7 +272,7 @@ def register_user(request):
             if form.is_valid():
                 user = User.objects.create_user(
                 username =form.cleaned_data['username'],
-                password =form.cleaned_data['password1'],
+                password =form.cleaned_data['pwd1'],
                 email =form.cleaned_data['email']
                 )
                 group = Group.objects.get(name='Utente')
@@ -292,7 +293,7 @@ def register_gestore(request):
             if form.is_valid():
                 user = User.objects.create_user(
                 username =form.cleaned_data['username'],
-                password =form.cleaned_data['password1'],
+                password =form.cleaned_data['pwd1'],
                 email =form.cleaned_data['email']
                 )
                 group = Group.objects.get(name = 'Direzione')
@@ -315,10 +316,10 @@ def login_test(request):
         if user is not None:
             print("autenticated")
             login(request,user)
-            return HttpResponseRedirect('/myBookingApp_2/search/',)
+            return HttpResponseRedirect('/myBookingApp_2/',)
         else:
             print("not autenticated")
-            return HttpResponseRedirect('/myBookingApp_2/search/', )
+            return HttpResponseRedirect('/myBookingApp_2/', )
     else:
         loginform = LoginForm()
         return render(request, 'login.html', {'form': loginform})
@@ -346,7 +347,7 @@ def login_2(request):
             return render(request, 'riepilogoprenotazione.html', {'id_camera': id_camera,'check_in': data_arrive,'check_out': data_leave, 'nome_stanza' : id_camera, 'nome_hotel':hotel })
         else:
             print("not autenticated")
-            return HttpResponseRedirect('/myBookingApp_2/search/')
+            return HttpResponseRedirect('/myBookingApp_2/')
     else:
         loginform = LoginForm()
         return render(request, 'login.html', {'form': loginform})
@@ -434,7 +435,51 @@ def AggiungiAWishlist(request):
 
 def CancellaPrenotazione(request):
     PrenotationDelete = int(request.POST['IdPrenotazione'])
+    # print("ID Prenotazione: ", PrenotationDelete)
+    
+    for p in Prenotazioni.objects.all():
+        if p.id == PrenotationDelete:
+            stanzaPrenotata = p.id_stanza_id
+            # print("La stanza prenotata è: ", stanzaPrenotata)
+
+    wishListFiltered = ListaAttesaStanza.objects.filter(lista_attesa_id = stanzaPrenotata)
+    prenotazioniFiltered = Prenotazioni.objects.all().filter(id_stanza_id = stanzaPrenotata)
+
+    print("Elimino la Prenotazione")
     Prenotazioni.objects.filter(id=PrenotationDelete).delete()
+
+    
+    for w in wishListFiltered:
+        win = w.check_in_lista_attesa
+        wout = w.check_out_lista_attesa
+        stanzaOccupata = 0
+        for p in prenotazioniFiltered:
+            pin = p.check_in
+            pout = p.check_out
+
+            if (win >= pin and win <= pout) or (wout >= pin and wout <= pout) or (
+                            win <= pin and wout >= pout):
+
+                print("Stanza Nel Periodo: ", p.id_stanza_id)
+                stanzaOccupata = 1
+
+
+            else:
+                print("Stanza Fuori Periodo: ", p.id_stanza_id)
+
+        if stanzaOccupata == 0:
+            print("L'utente può prenotare")
+            print("Sto Mandando la Mail")
+            subject = 'Booking staff'
+            message = 'Hi user, we inform you that you can book the room you have placed in the waiting list'
+            from_email = settings.EMAIL_HOST_USER
+            send_mail(subject, message, from_email, [w.user_id.email], fail_silently=False)
+            print("Email Inviata")
+        else:
+            print("L'utente non può prenotare")
+
+
+
     return HttpResponseRedirect('/myBookingApp_2/userpage')
 
 
@@ -458,5 +503,153 @@ def Votazione(request):
         return HttpResponseRedirect('/myBookingApp_2/userpage')
 
 
+def ModificaPrenotazione(request):
+    PrenotationEdit = int(request.POST['IdPrenotazione'])
+    data_checkin = request.POST['data_checkin']
+    data_checkout = request.POST['data_checkout']
+    prenotazioni = Prenotazioni.objects.all()
 
-# return HttpResponseRedirect('/myBookingApp_2/userpage')
+
+    for p in prenotazioni:
+        if p.id == PrenotationEdit:
+            data_checkin = p.check_in
+            data_checkout = p.check_out
+            id_stanza_modifica = p.id_stanza_id
+
+
+    # if request.method == 'GET':
+    #     print("Sono in GET")
+    #     form_editprenotazione = EditPrenotazione(initial={'check_in': data_checkin, 'check_out': data_checkout})
+    #     return render(request, "editprenotation.html", {'form_editprenotazione' : form_editprenotazione, 'prenotazione_modificata': PrenotationEdit})
+    if request.method == 'POST':
+        print("sono in POST")
+        form_editprenotazione = EditPrenotazione(initial={'check_in': data_checkin, 'check_out': data_checkout})
+        return render(request, "editprenotation.html", {'form_editprenotazione' : form_editprenotazione, 'prenotazione_modificata': PrenotationEdit})
+    else:
+        print("sono in GET")
+
+        form_editprenotazione = EditPrenotazione()
+        return render(request, "editprenotation.html",
+                      {'form_editprenotazione': form_editprenotazione, 'prenotazione_modificata': PrenotationEdit})
+
+
+def UpdateModificaPrenotazione(request):
+    if request.method == 'POST':
+        data = []
+        form_editprenotazione = EditPrenotazione(request.POST)
+        PrenotationEdit = int(request.POST['IdPrenotazione'])
+        print(PrenotationEdit)
+
+
+        # Salvo la prenotazione da modificare
+        for p in Prenotazioni.objects.all():
+            if p.id == PrenotationEdit:
+                prenotazione_stanza = p
+
+        # Filtro le prenotazioni per stanza prenotata e escludo la prenotazione che voglio modificare
+        prenotazioniListFiltered = Prenotazioni.objects.filter(id_stanza_id = prenotazione_stanza.id_stanza_id)
+        print("------------------------------------")
+        print(prenotazioniListFiltered)
+        print("------------------------------------")
+
+        prenotazioniListFiltered = prenotazioniListFiltered.exclude(id = PrenotationEdit)
+        print(prenotazioniListFiltered)
+
+        print("------------------------------------")
+
+
+
+        # Raccolgo i dati dal form se valido
+        if form_editprenotazione.is_valid():
+            print("IL FORM È VALIDO")
+            f_check_in = form_editprenotazione.cleaned_data['check_in']
+            f_check_out = form_editprenotazione.cleaned_data['check_out']
+            date_format = "%Y-%m-%d"
+            check_in_string = f_check_in.strftime(date_format)
+            check_out_string = f_check_out.strftime(date_format)
+            delta = f_check_out - f_check_in
+            data.append(check_in_string)
+            data.append(check_out_string)
+            data.append(delta.days)
+            counterPeriodoOccupato = 0
+
+            # Controllo che la stanza non sia occupata nelle nuove date
+            for stanza_prenotata in prenotazioniListFiltered:
+                print("sono dentro al for delle filtrate")
+                print(prenotazioniListFiltered)
+
+                cin = stanza_prenotata.check_in.strftime(date_format)
+                cout = stanza_prenotata.check_out.strftime(date_format)
+
+                if (data[0] >= cin and data[0] <= cout) or (data[1] >= cin and data[1] <= cout) or (
+                                data[0] <= cin and data[1] >= cout):
+
+                    print("Stanza Impegnata: ", stanza_prenotata.id_stanza_id)
+                    counterPeriodoOccupato = 1
+
+            # Se la stanza e libera effettuo la modifica della prenotazione
+            if counterPeriodoOccupato == 0:
+                obj = Prenotazioni.objects.get_or_create(
+                    id_stanza=get_object_or_404(Stanza, pk=p.id_stanza_id),
+                    id_user=get_object_or_404(User, pk=p.id_user_id), check_in=data[0], check_out=data[1])
+
+
+                #Controllo in wishlist se la stanza e libera nei periodi desiderati
+                for p in Prenotazioni.objects.all():
+                    if p.id == PrenotationEdit:
+                        stanzaPrenotata = p.id_stanza_id
+                        # print("La stanza prenotata è: ", stanzaPrenotata)
+                Prenotazioni.objects.filter(id=PrenotationEdit).delete()
+
+                wishListFiltered = ListaAttesaStanza.objects.filter(lista_attesa_id=stanzaPrenotata)
+                prenotazioniFiltered = Prenotazioni.objects.filter(id_stanza_id=stanzaPrenotata)
+
+
+                for w in wishListFiltered:
+                    win = w.check_in_lista_attesa
+                    wout = w.check_out_lista_attesa
+                    stanzaOccupata = 0
+                    for p in prenotazioniFiltered:
+                        pin = p.check_in
+                        pout = p.check_out
+
+                        if (win >= pin and win <= pout) or (wout >= pin and wout <= pout) or (
+                                        win <= pin and wout >= pout):
+
+                            print("Stanza Nel Periodo: ", p.id_stanza_id)
+                            stanzaOccupata = 1
+
+
+                        else:
+                            print("Stanza Fuori Periodo: ", p.id_stanza_id)
+
+
+                    # Se la stanza e libera nel periodo desiderato mando una mail all'utente'
+                    if stanzaOccupata == 0:
+                        print("L'utente può prenotare")
+                        print("Sto Mandando la Mail")
+                        subject = 'Booking staff'
+                        message = 'Hi ' + w.user_id.first_name + ', we inform you that you can book the room you added in the waiting list'
+                        from_email = settings.EMAIL_HOST_USER
+                        send_mail(subject, message, from_email, [w.user_id.email], fail_silently=False)
+                        print("Email Inviata")
+                    else:
+                        print("L'utente non può prenotare")
+
+                return HttpResponseRedirect('/myBookingApp_2/userpage')
+
+
+
+            else:
+                return render(request, 'modificaprenotazioneNONavvenuta.html')
+        else:
+            return HttpResponseRedirect('/myBookingApp_2/userpage')
+
+
+    # date_checkin = request.POST['check_in_day']
+    # data_checkin_month = request.POST['check_in_month']
+    # data_checkin_year = request.POST['check_in_year']
+
+    # print("Check In: ", date_checkin)
+
+    # return HttpResponseRedirect('/myBookingApp_2/userpage')

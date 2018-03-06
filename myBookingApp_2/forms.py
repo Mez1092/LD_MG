@@ -21,6 +21,19 @@ class SearchHotelForm(forms.Form):
     camera_fumatori = forms.BooleanField(initial=False, required=False)
     animali = forms.BooleanField(initial=False, required=False)
 
+
+
+class EditPrenotazione(forms.Form):
+    check_in = forms.DateField(widget=forms.widgets.SelectDateWidget, initial=datetime.date.today())
+    check_out = forms.DateField(widget=forms.widgets.SelectDateWidget,initial=datetime.date.today() + datetime.timedelta(days=1))
+
+    # def clean_check_out(self):
+    #     if 'check_out' in self.cleaned_data and 'check_in' in self.cleaned_data:
+    #         if self.cleaned_data['check_out'] < self.cleaned_data['check_in']:
+    #             raise forms.ValidationError("La data di checkout deve essere maggiore di quella di checkin")
+    #     return self.cleaned_data
+
+
 class AddRoomForm(forms.ModelForm):
     class Meta:
         model = Stanza
@@ -74,22 +87,24 @@ class AddToListaAttesa(forms.ModelForm):
 
 
 class RegistrationForm(forms.Form):
-    username = forms.RegexField(regex=r'^\w+$', widget=forms.TextInput(attrs=dict(required=True, max_length=30)), label=("Username"), error_messages={ 'invalid': ("This value must contain only letters, numbers and underscores.") })
-    email = forms.EmailField(widget=forms.TextInput(attrs=dict(required=True, max_length=30)), label=("Email address"))
-    password1 = forms.CharField(widget=forms.PasswordInput(attrs=dict(required=True, max_length=30, render_value=False)), label=("Password"))
-    password2 = forms.CharField(widget=forms.PasswordInput(attrs=dict(required=True, max_length=30, render_value=False)), label=("Password (again)"))
+    username = forms.RegexField(regex=r'\w+$', widget=forms.TextInput(attrs=dict(required=True, max_length=30)), label=("Username"), error_messages={ 'invalid': ("Il campo può contenere solo lettere,numeri e underscore") })
+    email = forms.EmailField(widget=forms.TextInput(attrs=dict(required=True, max_length=30)), label=("Indirizzo Email"))
+    pwd1 = forms.CharField(widget=forms.PasswordInput(attrs=dict(required=True, max_length=30, render_value=False)), label=("Password"))
+    pwd2 = forms.CharField(widget=forms.PasswordInput(attrs=dict(required=True, max_length=30, render_value=False)), label=("Ripetere Password"))
 
     def clean_username(self):
         try:
             user = User.objects.get(username__iexact=self.cleaned_data['username'])
         except User.DoesNotExist:
             return self.cleaned_data['username']
-        raise forms.ValidationError("The username already exists. Please try another one.")
+        raise forms.ValidationError("Username già esistente")
+
+
 
     def clean(self):
-        if 'password1' in self.cleaned_data and 'password2' in self.cleaned_data:
-            if self.cleaned_data['password1'] != self.cleaned_data['password2']:
-                raise forms.ValidationError("The two password fields did not match.")
+        if 'pwd1' in self.cleaned_data and 'pwd2' in self.cleaned_data:
+            if self.cleaned_data['pwd1'] != self.cleaned_data['pwd2']:
+                raise forms.ValidationError("Le due password non corrispondono")
         return self.cleaned_data
 
 class LoginForm(forms.Form):
