@@ -19,6 +19,15 @@
                     <div style="margin: 10px;">
                         <h2 style="color: red;text-align: center; font-weight: bold;font-size: 35px;">{{ris_hotel.nome}}</h2>  
                         <p class="wht-text">Descrizione: {{ris_hotel.descrizione}}
+{#                        {% for key, value in votiHotel.items %}#}
+{#                            {% if key == ris_hotel.id %}#}
+{#                                <p class="wht-text">Valutazione: {{value}}#}
+{#                            {% endif %}#}
+{##}
+{#                        {% endfor %}#}
+                        <p class="wht-text">Valutazione: {{ris_hotel.media_voto}}
+
+
                         <hr>
                         <p class="wht-text"> {{ris_hotel.indirizzo}} -
                             {{ris_hotel.citta}} -

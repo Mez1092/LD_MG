@@ -86,6 +86,28 @@ def search(request):
                 data.append(delta.days)
 
                 Filtered_hotels = Filtered_hotels.filter(citta__icontains=f_citta).all()
+                # hotelIDs = [h.id for h in Filtered_hotels]
+                # print(hotelIDs)
+                # Voti = Voto.objects.all()
+                # VotiHotel = {}
+                #
+                # for hId in hotelIDs:
+                #     votoTOT = 0
+                #     counter = 0
+                #     for record in Voti:
+                #         if hId == record.hotel_id_id:
+                #             counter += 1
+                #             votoTOT +=  record.voto
+                #
+                #     VotiHotel[hId] = votoTOT/counter
+                #
+                # for key, value in VotiHotel.items():
+                #     for h in Filtered_hotels:
+                #         if key == h.id:
+                #             h.media_voto = value
+                # print(Filtered_hotels)
+                Filtered_hotels = Filtered_hotels.order_by('media_voto')[::-1]
+                # print(VotiHotel)
                 # Filtered_hotels = Filtered_hotels.filter(citta=f_citta).all()
 
                 # filtro solo gli elementi che hanno le caratteristiche inserite nel form
@@ -136,6 +158,7 @@ def search(request):
                               {'data': data, 'risultati_hotel': Filtered_hotels, 'form_search': form_search_hotel,
                                'stanze_filtrate': risultati_stanze, "stanze_prenotate": prenotazioni_filtrate,
                                "id_prenotate": p})
+
 
 
         else:
@@ -240,7 +263,8 @@ def creahotel(request):
                                          palestra=f_palestra,bar=f_bar,
                                          spa=f_spa, descrizione=f_descrizione,
                                          sito=f_sito,
-                                         pub_date = datetime.datetime.now()
+                                         pub_date = datetime.datetime.now(),
+                                         direttore = request.user
                                          )
                     return render(request, 'successocrezionehotel.html')
                 except IntegrityError as e:
@@ -496,6 +520,26 @@ def Votazione(request):
 
     try:
         obj = Voto.objects.get_or_create(hotel_id_id=hotel_id, user_id_id=request.user.id, voto=voto)
+
+        VotiHotel = {}
+
+        for hId in Hotel.objects.all():
+            votoTOT = 0
+            counter = 0
+            for record in Voto.objects.all():
+                if hId.id == record.hotel_id_id:
+                    counter += 1
+                    votoTOT += record.voto
+
+            if counter != 0:
+                VotiHotel[hId.id] = votoTOT / counter
+
+        for key, value in VotiHotel.items():
+            for h in Hotel.objects.all():
+                print(key,h.id)
+                if key == h.id:
+                    print("Aggiorno il voto ")
+                    Hotel.objects.filter(id = key).update(media_voto = value)
         return HttpResponseRedirect('/myBookingApp_2/userpage')
 
     except IntegrityError as e:

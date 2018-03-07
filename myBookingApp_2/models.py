@@ -21,6 +21,8 @@ class Hotel(models.Model):
     spa = models.BooleanField(default=False)
     descrizione = models.CharField(max_length=1000)
     sito = models.CharField(max_length=600)
+    media_voto = models.FloatField(default = 0)
+    direttore = models.CharField(max_length=200)
     pub_date = models.DateField('date published')
 
     def __str__(self):
@@ -36,6 +38,7 @@ class Stanza(models.Model):
     aria_condizionata = models.BooleanField(default=False)
     camera_fumatori = models.BooleanField(default=False)
     animali = models.BooleanField(default=False)
+
 
     class Meta:
         unique_together = (("id_hotel", "num_camera"),)

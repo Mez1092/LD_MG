@@ -34,12 +34,13 @@ class EditPrenotazione(forms.Form):
     #     return self.cleaned_data
 
 
-class AddRoomForm(forms.ModelForm):
+class AddRoomForm(forms.Form):
     class Meta:
         model = Stanza
         fields = ('id_hotel', 'num_camera','prezzo','num_persone','prezzo_festivita', 'aria_condizionata','camera_fumatori','animali')
-
-    # nome = forms.IntegerField(widget=forms.Select(choices=[(hotel.nome) for hotel in Hotel.objects.all()]),required=True)
+    # def get_current_user(request):
+    #     return request.user
+    # nome = forms.IntegerField(widget=forms.Select(choices=[(hotel.nome) for hotel in Hotel.objects.all().filter(direttore = get_current_user())]), required=True)
     # num_camera = forms.IntegerField(required=True,)
     # prezzo = forms.FloatField(required=True)
     # prezzo_festivita = forms.FloatField(required=True)
@@ -47,6 +48,7 @@ class AddRoomForm(forms.ModelForm):
     # aria_condizionata = forms.BooleanField(initial=False, required=False)
     # camera_fumatori = forms.BooleanField(initial=False, required=False)
     # animali = forms.BooleanField(initial=False, required=False)
+
 
 class AddHotelForm(forms.ModelForm):
     class Meta:
