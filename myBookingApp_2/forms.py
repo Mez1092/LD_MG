@@ -5,7 +5,8 @@ import datetime
 
 
 class SearchHotelForm(forms.Form):
-    citta = forms.CharField(widget=forms.TextInput,required=False)
+    # citta = forms.CharField(widget=forms.TextInput(attrs=dict(required=False, id='testcitta')),required=False,)
+    citta = forms.CharField(widget=forms.TextInput(), required=False)
     check_in = forms.DateField(widget=forms.widgets.SelectDateWidget, initial=datetime.date.today())
     check_out = forms.DateField(widget=forms.widgets.SelectDateWidget,initial=datetime.date.today() + datetime.timedelta(days=1))
     piscina = forms.BooleanField(initial=False, required=False)
@@ -20,6 +21,10 @@ class SearchHotelForm(forms.Form):
     aria_condizionata = forms.BooleanField(initial=False, required=False)
     camera_fumatori = forms.BooleanField(initial=False, required=False)
     animali = forms.BooleanField(initial=False, required=False)
+    CHOICES = [('prezzo', 'Prezzo'),
+               ('voto', 'Voto')]
+
+    ordinamento = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect())
 
 
 
@@ -34,20 +39,15 @@ class EditPrenotazione(forms.Form):
     #     return self.cleaned_data
 
 
-class AddRoomForm(forms.Form):
+class AddRoomForm(forms.ModelForm):
     class Meta:
         model = Stanza
-        fields = ('id_hotel', 'num_camera','prezzo','num_persone','prezzo_festivita', 'aria_condizionata','camera_fumatori','animali')
-    # def get_current_user(request):
-    #     return request.user
-    # nome = forms.IntegerField(widget=forms.Select(choices=[(hotel.nome) for hotel in Hotel.objects.all().filter(direttore = get_current_user())]), required=True)
-    # num_camera = forms.IntegerField(required=True,)
-    # prezzo = forms.FloatField(required=True)
-    # prezzo_festivita = forms.FloatField(required=True)
-    # num_persone = forms.IntegerField(min_value=1,required=True)
-    # aria_condizionata = forms.BooleanField(initial=False, required=False)
-    # camera_fumatori = forms.BooleanField(initial=False, required=False)
-    # animali = forms.BooleanField(initial=False, required=False)
+        fields = ('id_hotel', 'num_camera','prezzo','num_persone','prezzo_festivita','aria_condizionata','camera_fumatori','animali')
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super(AddRoomForm, self).__init__(*args, **kwargs)
+        self.fields['id_hotel'].queryset = Hotel.objects.filter(direttore=user)
 
 
 class AddHotelForm(forms.ModelForm):

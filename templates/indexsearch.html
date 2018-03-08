@@ -7,7 +7,7 @@
         <form action="." method="POST">
             {% csrf_token %}
                 {{form_search.as_p }}
-            <input type="Submit" name="Submit" value="Cerca">
+            <input type="Submit" name="Submit" value="Cerca" onclick="DateControll()">
         </form>
     </div>
 

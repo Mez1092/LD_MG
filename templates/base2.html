@@ -43,6 +43,49 @@
             function Loginrequired(){
                     alert('You must authenticated before do this')
                 }
+
+            function DateControll(){
+
+                var check_in_month = document.getElementById("id_check_in_month")
+                var check_out_month = document.getElementById("id_check_out_month")
+                var check_in_day = document.getElementById("id_check_in_day")
+                var check_out_day = document.getElementById("id_check_out_day")
+                var check_in_year = document.getElementById("id_check_in_year")
+                var check_out_year = document.getElementById("id_check_out_year")
+
+                var todayMonth = new Date().getMonth() +1;
+                {#alert(todayMonth)#}
+                var todayDay =  new Date().getUTCDate();
+                {#alert(todayDay)#}
+
+                if ( check_in_month.options[check_in_month.selectedIndex].value < todayMonth || check_in_day.options[check_in_day.selectedIndex].value < todayDay)
+                {
+                    event.preventDefault()
+                    alert("ERRORE DATA ANTECEDENTE A OGGI")
+                }
+                else if (check_in_year.options[check_in_year.selectedIndex].value > check_out_year.options[check_out_year.selectedIndex].value)
+                {
+                    event.preventDefault()
+                    alert("ERRORE ANNO ! LA DATA DI CHECKIN RISULTA ESSERE MAGGIORE DELLA DATA DI CHECKOUT")
+                    return false;
+                }
+                else if (check_in_month.options[check_in_month.selectedIndex].value > check_out_month.options[check_out_month.selectedIndex].value )
+                {
+                    event.preventDefault()
+                    alert("ERRORE MESE! LA DATA DI CHECKIN RISULTA ESSERE MAGGIORE DELLA DATA DI CHECKOUT")
+                    return false;
+                }
+                {#else if (check_in_day.options[check_in_day.selectedIndex].value > check_out_day.options[check_out_day.selectedIndex].value)#}
+                else if (check_in_day.selectedIndex > check_out_day.selectedIndex)
+                {
+                    event.preventDefault()
+                    alert("ERRORE GIORNO! LA DATA DI CHECKIN RISULTA ESSERE MAGGIORE DELLA DATA DI CHECKOUT")
+                    return false;
+                }
+            }
+                {#var strUser = e.options[e.selectedIndex].value;#}
+                {#    alert(strUser)#}
+
         </script>
         <style>
         body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", Arial, Helvetica, sans-serif}

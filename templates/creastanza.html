@@ -35,7 +35,8 @@
     <div class="well " align="center" style="background-color: #ccbb99;padding: 10px" >
         <form action="." method="POST">
             {% csrf_token %}
-                {{form_aggiungi_stanza.as_p }}
+                {{ form_aggiungi_stanza.as_p }}
+{#                {{form_aggiungi_stanza.as_p }}#}
 {#            {% if messages %}#}
 {#                <ul class="messages">#}
 {#                    {% for message in messages %}#}
@@ -43,7 +44,7 @@
 {#                    {% endfor %}#}
 {#                </ul>#}
 {#            {% endif %}#}
-{#            {{ form_aggiungi_stanza.as_p }}#}
+
             <input type="Submit" name="Submit" value="Aggiungi">
         </form>
     </div>

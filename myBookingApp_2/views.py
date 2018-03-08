@@ -76,6 +76,8 @@ def search(request):
                 f_aria_condizionata = form_search_hotel.cleaned_data['aria_condizionata']
                 f_camera_fumatori = form_search_hotel.cleaned_data['camera_fumatori']
                 f_animali = form_search_hotel.cleaned_data['animali']
+                f_ordinamento = form_search_hotel.cleaned_data['ordinamento']
+                print(f_ordinamento)
                 # trasformo in stringa la data di checkin e checkout per calcolare il delta
                 date_format = "%Y-%m-%d"
                 check_in_string = f_check_in.strftime(date_format)
@@ -106,7 +108,7 @@ def search(request):
                 #         if key == h.id:
                 #             h.media_voto = value
                 # print(Filtered_hotels)
-                Filtered_hotels = Filtered_hotels.order_by('media_voto')[::-1]
+                # Filtered_hotels = Filtered_hotels.order_by('media_voto')[::-1]
                 # print(VotiHotel)
                 # Filtered_hotels = Filtered_hotels.filter(citta=f_citta).all()
 
@@ -153,6 +155,22 @@ def search(request):
 
                     else:
                         print("Stanza Fuori Periodo: ", stanza_prenotata.id)
+
+                # for t in total_id_hotel:
+                #     Filtered_hotels = Filtered_hotels.filter(id=t.id).exists()
+                #
+                # print(Filtered_hotels)
+
+                # tengo solo gli hotel filtrati che possiedono delle stanze:    DA RIVEDERE PER TROVARE QUALCOSA DI MEGLIO
+                if total_id_hotel:
+                    for h in Filtered_hotels:
+                        count = 0
+                        for e in total_id_hotel:
+                            if h.id == e.id :
+                                count = count +1
+                        if count == 0:
+                            print("Hotel senza camera: ",h.nome)
+                            Filtered_hotels = Filtered_hotels.exclude(pk=h.pk)
 
                 return render(request, 'indexsearch.html',
                               {'data': data, 'risultati_hotel': Filtered_hotels, 'form_search': form_search_hotel,
@@ -202,7 +220,7 @@ def creastanza(request):
     if request.user.groups.filter(name__in = ["Direzione"]).exists():
         if request.method == 'POST':
 
-            form_crea_stanza = AddRoomForm(request.POST)
+            form_crea_stanza = AddRoomForm(request.POST,user=request.user)
             if form_crea_stanza.is_valid():
                 f_id_hotel = request.POST['id_hotel']
                 f_num_camera = request.POST['num_camera']
@@ -228,7 +246,8 @@ def creastanza(request):
             #                 print("numero camera gia esistente")
         else:
             # se sono in una get faccio vedere il form vuoto
-            form_crea_stanza = AddRoomForm()
+            form_crea_stanza = AddRoomForm(user=request.user)
+
         return render(request, 'creastanza.html', {'form_aggiungi_stanza': form_crea_stanza})
     else:
         return render(request, 'accessonegato.html')
@@ -464,7 +483,7 @@ def CancellaPrenotazione(request):
     for p in Prenotazioni.objects.all():
         if p.id == PrenotationDelete:
             stanzaPrenotata = p.id_stanza_id
-            # print("La stanza prenotata è: ", stanzaPrenotata)
+            # print("La stanza prenotata : ", stanzaPrenotata)
 
     wishListFiltered = ListaAttesaStanza.objects.filter(lista_attesa_id = stanzaPrenotata)
     prenotazioniFiltered = Prenotazioni.objects.all().filter(id_stanza_id = stanzaPrenotata)
@@ -492,7 +511,7 @@ def CancellaPrenotazione(request):
                 print("Stanza Fuori Periodo: ", p.id_stanza_id)
 
         if stanzaOccupata == 0:
-            print("L'utente può prenotare")
+            print("L'utente puo prenotare")
             print("Sto Mandando la Mail")
             subject = 'Booking staff'
             message = 'Hi user, we inform you that you can book the room you have placed in the waiting list'
@@ -500,7 +519,7 @@ def CancellaPrenotazione(request):
             send_mail(subject, message, from_email, [w.user_id.email], fail_silently=False)
             print("Email Inviata")
         else:
-            print("L'utente non può prenotare")
+            print("L'utente non puo prenotare")
 
 
 
@@ -605,7 +624,7 @@ def UpdateModificaPrenotazione(request):
 
         # Raccolgo i dati dal form se valido
         if form_editprenotazione.is_valid():
-            print("IL FORM È VALIDO")
+            print("IL FORM E VALIDO")
             f_check_in = form_editprenotazione.cleaned_data['check_in']
             f_check_out = form_editprenotazione.cleaned_data['check_out']
             date_format = "%Y-%m-%d"
@@ -642,7 +661,7 @@ def UpdateModificaPrenotazione(request):
                 for p in Prenotazioni.objects.all():
                     if p.id == PrenotationEdit:
                         stanzaPrenotata = p.id_stanza_id
-                        # print("La stanza prenotata è: ", stanzaPrenotata)
+                        # print("La stanza prenotata : ", stanzaPrenotata)
                 Prenotazioni.objects.filter(id=PrenotationEdit).delete()
 
                 wishListFiltered = ListaAttesaStanza.objects.filter(lista_attesa_id=stanzaPrenotata)
@@ -670,7 +689,7 @@ def UpdateModificaPrenotazione(request):
 
                     # Se la stanza e libera nel periodo desiderato mando una mail all'utente'
                     if stanzaOccupata == 0:
-                        print("L'utente può prenotare")
+                        print("L'utente puo prenotare")
                         print("Sto Mandando la Mail")
                         subject = 'Booking staff'
                         message = 'Hi ' + w.user_id.first_name + ', we inform you that you can book the room you added in the waiting list'
@@ -678,7 +697,7 @@ def UpdateModificaPrenotazione(request):
                         send_mail(subject, message, from_email, [w.user_id.email], fail_silently=False)
                         print("Email Inviata")
                     else:
-                        print("L'utente non può prenotare")
+                        print("L'utente non puo prenotare")
 
                 return HttpResponseRedirect('/myBookingApp_2/userpage')
 
