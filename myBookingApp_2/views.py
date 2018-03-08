@@ -37,7 +37,7 @@ def userpage(request):
 def search(request):
         hotels = Hotel.objects.all()
         stanze = Stanza.objects.all()
-        stanze = stanze.order_by("prezzo")
+        # stanze = stanze.order_by("prezzo")
         prenotazioni = Prenotazioni.objects.all()
         prenotazioni_totali = Prenotazioni.objects.all()
         data = []
@@ -171,6 +171,11 @@ def search(request):
                         if count == 0:
                             print("Hotel senza camera: ",h.nome)
                             Filtered_hotels = Filtered_hotels.exclude(pk=h.pk)
+
+                if f_ordinamento == 'voto':
+                 Filtered_hotels = Filtered_hotels.order_by('media_voto')
+                else:
+                 risultati_stanze = risultati_stanze.order_by('prezzo')
 
                 return render(request, 'indexsearch.html',
                               {'data': data, 'risultati_hotel': Filtered_hotels, 'form_search': form_search_hotel,
