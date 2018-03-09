@@ -90,6 +90,8 @@ class AddToListaAttesa(forms.ModelForm):
 
 class RegistrationForm(forms.Form):
     username = forms.RegexField(regex=r'\w+$', widget=forms.TextInput(attrs=dict(required=True, max_length=30)), label=("Username"), error_messages={ 'invalid': ("Il campo può contenere solo lettere,numeri e underscore") })
+    first_name = forms.CharField(widget=forms.TextInput(attrs=dict(required=True, max_length=30)), label=("Nome"))
+    last_name = forms.CharField(widget=forms.TextInput(attrs=dict(required=True, max_length=30)), label=("Cognome"))
     email = forms.EmailField(widget=forms.TextInput(attrs=dict(required=True, max_length=30)), label=("Indirizzo Email"))
     pwd1 = forms.CharField(widget=forms.PasswordInput(attrs=dict(required=True, max_length=30, render_value=False)), label=("Password"))
     pwd2 = forms.CharField(widget=forms.PasswordInput(attrs=dict(required=True, max_length=30, render_value=False)), label=("Ripetere Password"))

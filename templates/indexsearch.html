@@ -19,12 +19,7 @@
                     <div style="margin: 10px;">
                         <h2 style="color: red;text-align: center; font-weight: bold;font-size: 35px;">{{ris_hotel.nome}}</h2>  
                         <p class="wht-text">Descrizione: {{ris_hotel.descrizione}}
-{#                        {% for key, value in votiHotel.items %}#}
-{#                            {% if key == ris_hotel.id %}#}
-{#                                <p class="wht-text">Valutazione: {{value}}#}
-{#                            {% endif %}#}
-{##}
-{#                        {% endfor %}#}
+
                         <p class="wht-text">Valutazione: {{ris_hotel.media_voto}}
 
 
@@ -104,11 +99,7 @@
                                             {% else %}
                                                 <input type="Submit" name="Submit" value="PrenotaNONLoggatoVerde" onclick="Loginrequired()">
                                             {% endif%}
-                                       </form>{#                                <form action="/myBookingApp_2/preferiti/" method="post">#}
-    {#                                                {% csrf_token %}#}
-    {#                                                    <input type="hidden" name="id" value={{r.id}}>#}
-    {#                                                    <input type="Submit" name="AggiungiAiPreferiti" value="Aggiungi ai Preferiti">#}
-    {#                                </form>#}
+                                       </form>
                                </div>
                            {% endif %}
                         {% endif %}

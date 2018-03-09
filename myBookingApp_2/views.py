@@ -3,25 +3,16 @@ from django.contrib.auth.views import redirect_to_login
 from django.db.models.functions import datetime
 from django.contrib import messages
 from django.db import IntegrityError
-from django.template.defaultfilters import *
 from django.contrib.auth import logout, authenticate, login
-from django.shortcuts import render_to_response
 from datetime import datetime
 from django.http import HttpResponseRedirect
-from django.template import RequestContext
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required
 from .forms import *
 from django.core.mail import send_mail
 from django.conf import settings
 
 import datetime
-
-# def index(request):
-#     hotels = Hotel.objects.all()
-#     stanze = Stanza.objects.all()
-#     return render(request, 'index.html', {'hotels': hotels , "stanze" : stanze})
 
 def userpage(request):
 
@@ -37,7 +28,6 @@ def userpage(request):
 def search(request):
         hotels = Hotel.objects.all()
         stanze = Stanza.objects.all()
-        # stanze = stanze.order_by("prezzo")
         prenotazioni = Prenotazioni.objects.all()
         prenotazioni_totali = Prenotazioni.objects.all()
         data = []
@@ -88,29 +78,7 @@ def search(request):
                 data.append(delta.days)
 
                 Filtered_hotels = Filtered_hotels.filter(citta__icontains=f_citta).all()
-                # hotelIDs = [h.id for h in Filtered_hotels]
-                # print(hotelIDs)
-                # Voti = Voto.objects.all()
-                # VotiHotel = {}
-                #
-                # for hId in hotelIDs:
-                #     votoTOT = 0
-                #     counter = 0
-                #     for record in Voti:
-                #         if hId == record.hotel_id_id:
-                #             counter += 1
-                #             votoTOT +=  record.voto
-                #
-                #     VotiHotel[hId] = votoTOT/counter
-                #
-                # for key, value in VotiHotel.items():
-                #     for h in Filtered_hotels:
-                #         if key == h.id:
-                #             h.media_voto = value
-                # print(Filtered_hotels)
-                # Filtered_hotels = Filtered_hotels.order_by('media_voto')[::-1]
-                # print(VotiHotel)
-                # Filtered_hotels = Filtered_hotels.filter(citta=f_citta).all()
+
 
                 # filtro solo gli elementi che hanno le caratteristiche inserite nel form
                 if f_piscina:
@@ -156,10 +124,7 @@ def search(request):
                     else:
                         print("Stanza Fuori Periodo: ", stanza_prenotata.id)
 
-                # for t in total_id_hotel:
-                #     Filtered_hotels = Filtered_hotels.filter(id=t.id).exists()
-                #
-                # print(Filtered_hotels)
+
 
                 # tengo solo gli hotel filtrati che possiedono delle stanze:    DA RIVEDERE PER TROVARE QUALCOSA DI MEGLIO
                 if total_id_hotel:
@@ -320,6 +285,8 @@ def register_user(request):
             if form.is_valid():
                 user = User.objects.create_user(
                 username =form.cleaned_data['username'],
+                first_name = form.cleaned_data['first_name'],
+                last_name = form.cleaned_data['last_name'],
                 password =form.cleaned_data['pwd1'],
                 email =form.cleaned_data['email']
                 )
@@ -341,9 +308,12 @@ def register_gestore(request):
             if form.is_valid():
                 user = User.objects.create_user(
                 username =form.cleaned_data['username'],
+                first_name = form.cleaned_data['first_name'],
+                last_name = form.cleaned_data['last_name'],
                 password =form.cleaned_data['pwd1'],
                 email =form.cleaned_data['email']
                 )
+                print()
                 group = Group.objects.get(name = 'Direzione')
                 user.groups.add(group)
                 return render(request, 'successocreazionedirettore.html')

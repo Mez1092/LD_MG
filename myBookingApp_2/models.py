@@ -40,6 +40,7 @@ class Stanza(models.Model):
     animali = models.BooleanField(default=False)
 
 
+
     class Meta:
         unique_together = (("id_hotel", "num_camera"),)
 
