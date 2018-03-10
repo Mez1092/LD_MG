@@ -19,17 +19,10 @@
     <div class="w3-bar w3-large navbar-base">
         <a href="/myBookingApp_2/" class="w3-bar-item w3-button nav-b wht-text w3-mobile"><i class="fa fa-bed w3-margin-right"></i>MyBookingApp</a>
 
-        {% if user.is_authenticated %}
-            <a href="http://127.0.0.1:8000/myBookingApp_2/logout" class="w3-bar-item w3-button nav-b wht-text w3-mobile w3-right"  >Logout</a>
-            <a href="http://127.0.0.1:8000/myBookingApp_2/userpage" class="w3-bar-item w3-button nav-b wht-text w3-mobile w3-right" >{{ user.username }}</a>
-        {% else %}
-            <a href="http://127.0.0.1:8000/myBookingApp_2/login" class="w3-bar-item w3-button nav-b wht-text w3-right w3-mobile">Login</a>
-            <a class="w3-bar-item w3-button w3-right w3-mobile nav-b wht-text">Anonymous</a>
-        {% endif %}
     </div>
 
     <header class="w3-display-container w3-content" style="max-width:1500px;">
-            <img src="{% static "/images/pagina_iniziale/wishlist.jpeg"%}"  height="70%" width="100%" alt="The Hotel" >
+            <img src="{% static "/images/pagina_iniziale/1.jpg"%}"  height="70%" width="100%" alt="The Hotel" >
     </header>
 
 {% endblock%}

@@ -1,5 +1,6 @@
 {% extends "base2.html" %}
 
+
 {% block content %}
 <nav>
     <h1 class="wht-text"style="font-size: 300%;">Modifica Prenotazione:</h1>
@@ -11,7 +12,7 @@
                 {{form_editprenotazione.as_p }}
             <input type="hidden" name="IdPrenotazione" value={{prenotazione_modificata}}>
 
-            <input type="Submit" name="UpdateConfermaModifica" value="Conferma Modifica">
+            <input type="Submit" name="UpdateConfermaModifica" value="Conferma Modifica" onclick="DateControll()">
         </form>
 
 
@@ -39,9 +40,6 @@
 {#        </form>#}
     </div>
 {% endblock %}
-<footer>
-    <em>scisoacsacoakocak</em>
-</footer>
-<!---OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!-->
+
 </body>
 </html>

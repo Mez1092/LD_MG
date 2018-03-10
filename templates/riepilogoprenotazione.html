@@ -30,38 +30,56 @@
     </div>
 
     <header class="w3-display-container w3-content" style="max-width:1500px;">
-            <img src="{% static "/images/pagina_iniziale/confermaprenotazione.jpg"%}"  height="70%" width="100%" alt="The Hotel" >
+            <img src="{% static "/images/pagina_iniziale/3.jpg"%}"  height="70%" width="100%" alt="The Hotel" >
     </header>
 
 {% endblock%}
 
 {% block content %}
-<nav>
-    <h1 style="font-size: 300%;color: white">Riepilogo prenotazione:</h1>
-</nav>
+{#<nav>#}
+{#    <h1 style="font-size: 300%;color: white">Riepilogo prenotazione:</h1>#}
+{#</nav>#}
     {% for h in nome_hotel %}
          <table style="width:100%">
                     <tr>
                         <td>
-                            <div class="prenotations wht-text" style="background-color: ">
-                                <p><h2>Hotel: {{h.nome}}</h2></p>
-                                <p><h2>Stanza: {{nome_stanza}}</h2></p>
-                                <p><h2>Città: {{h.citta}}</h2></p>
-                                <p><h2>indirizzo: {{h.indirizzo}}</h2></p>
-                                <p><h2>Utente Prenotazione: {{user}}</h2></p>
-                                <p><h2>Check_in: {{check_in}}</h2></p>
-                                <p><h2>Check_out: {{check_out}}</h2></p>
-                                </p>
-                            </div>
-                            <form action="/myBookingApp_2/prenota/" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="id_hotel" value={{h.id}}>
-                                <input type="hidden" name="id" value={{nome_stanza}}>
-                                <input type="hidden" name="data_arrive" value={{ check_in }}>
-                                <input type="hidden" name="data_leave" value={{ check_out }}>
+                            <div class="prenotations wht-text col-md-12 well " style="background-color:  #ccbb99;padding: 10px" >
+                                <div class="col-md-6" style="color: darkred!important;">
+                                    <p><h1>Hotel:</h1></p>
+                                    <p><h1>Stanza: </h1> </p>
+                                    <p><h1>indirizzo: </h1></p>
+                                    <p><h1>Città: </h1></p>
+                                    <hr>
+                                    <p><h1>Utente Prenotazione: </h1></p>
+                                    <p><h1>Data Check In: </h1> </p>
+                                    <p><h1>Data Check Out: </h1> </p>
 
-                                <input type="Submit" name="AggiungiPrenotazione" value="Conferma Prenotazione">
-                            </form>
+                                </div>
+                                 <div class="col-md-6">
+                                    <p><h1>{{h.nome}}</h1></p>
+                                    <p> <h1>{{nome_stanza}}</h1></p>
+                                    <p><h1>{{h.indirizzo}}</h1></p>
+                                     <p><h1>{{h.citta}}</h1></p>
+                                     <hr>
+                                    <p> <h1>{{user}}</h1></p>
+                                    <p><h1>{{check_in}}</h1></p>
+                                    <p> <h1>{{check_out}}</h1></p>
+
+                                </div>
+
+
+                            </div>
+                            <div class="col-md-12" style="text-align:center">
+                                <form action="/myBookingApp_2/prenota/" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="id_hotel" value={{h.id}}>
+                                    <input type="hidden" name="id" value={{nome_stanza}}>
+                                    <input type="hidden" name="data_arrive" value={{ check_in }}>
+                                    <input type="hidden" name="data_leave" value={{ check_out }}>
+
+                                    <input type="Submit" name="AggiungiPrenotazione" value="Conferma Prenotazione">
+                                </form>
+                            </div>
 
                         </td>
                     </tr>

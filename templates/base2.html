@@ -26,6 +26,7 @@
 
             margin-top: -50px;
         }
+
     </style>
 {% endblock%}
 
@@ -58,7 +59,12 @@
                 var todayDay =  new Date().getUTCDate();
                 {#alert(todayDay)#}
 
-                if ( check_in_month.options[check_in_month.selectedIndex].value < todayMonth || check_in_day.options[check_in_day.selectedIndex].value < todayDay)
+                if ( check_in_month.options[check_in_month.selectedIndex].value < todayMonth)
+                {
+                    event.preventDefault()
+                    alert("ERRORE DATA ANTECEDENTE A OGGI")
+                }
+                else if (check_in_month.options[check_in_month.selectedIndex].value >= todayMonth && check_in_day.options[check_in_day.selectedIndex].value < todayDay)
                 {
                     event.preventDefault()
                     alert("ERRORE DATA ANTECEDENTE A OGGI")
@@ -109,7 +115,7 @@
     </div>
 
     <header class="w3-display-container w3-content" style="max-width:1500px;">
-            <img src="{% static "/images/pagina_iniziale/intestazione.jpeg"%}"  height="70%" width="100%" alt="The Hotel" >
+            <img src="{% static "/images/pagina_iniziale/5.jpg"%}"  height="70%" width="100%" alt="The Hotel" >
     </header>
 
 {% endblock%}
