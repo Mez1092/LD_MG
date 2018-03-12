@@ -39,7 +39,7 @@ INSTALLED_APPS = [
 ]
 
 
-MIDDLEWARE = [
+MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -72,27 +72,27 @@ WSGI_APPLICATION = 'Booking_2.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-#
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
-
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-
-        'OPTIONS': {
-            'sql_mode':'STRICT_TRANS_TABLES',
-            'read_default_file':'/home/marco/Desktop/LD_Greg_Mezz/Booking_2/Booking_2/db.config',
-        }
-
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR,'db.sqlite3'),
     }
 }
+
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#
+#         'OPTIONS': {
+#             'sql_mode':'STRICT_TRANS_TABLES',
+#             'read_default_file':'/home/marco/Desktop/LD_Greg_Mezz/Booking_2/Booking_2/db.config',
+#         }
+#
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
