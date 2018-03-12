@@ -12,6 +12,9 @@ from .forms import *
 from django.core.mail import send_mail
 from django.conf import settings
 import datetime
+# from django import template
+#
+# register = template.Library()
 
 def userpage(request):
 
@@ -69,12 +72,12 @@ def search(request):
                 print(f_ordinamento)
                 # trasformo in stringa la data di checkin e checkout per calcolare il delta
                 date_format = "%Y-%m-%d"
-                check_in_string = f_check_in.strftime(date_format)
-                check_out_string = f_check_out.strftime(date_format)
-                delta = f_check_out - f_check_in
-                data.append(check_in_string)
-                data.append(check_out_string)
-                data.append(delta.days)
+                # check_in_string = f_check_in.strftime(date_format)
+                # check_out_string = f_check_out.strftime(date_format)
+                delta = (f_check_out - f_check_in)
+                data.append(f_check_in)
+                data.append(f_check_out)
+                data.append(int(delta.days))
 
                 Filtered_hotels = Filtered_hotels.filter(citta__icontains=f_citta).all()
 
@@ -109,9 +112,13 @@ def search(request):
                 risultati_stanze = Filtered_rooms
                 f_id_stanze_filtrate = [room.id for room in Filtered_rooms]
 
+
+
+
+
                 for stanza_prenotata in prenotazioni_totali:
-                    cin = stanza_prenotata.check_in.strftime(date_format)
-                    cout = stanza_prenotata.check_out.strftime(date_format)
+                    cin = stanza_prenotata.check_in
+                    cout = stanza_prenotata.check_out
 
                     if (data[0] >= cin and data[0] <= cout) or (data[1] >= cin and data[1] <= cout) or (
                             data[0] <= cin and data[1] >= cout):
@@ -141,10 +148,20 @@ def search(request):
                 else:
                  risultati_stanze = risultati_stanze.order_by('prezzo')
 
+                prezzo_vacanza = {}
+
+                for r in risultati_stanze:
+                    prezzo_vacanza[r.id] = r.prezzo*delta.days
+
+
+                print(prezzo_vacanza)
+
+
+
                 return render(request, 'indexsearch.html',
                               {'data': data, 'risultati_hotel': Filtered_hotels, 'form_search': form_search_hotel,
                                'stanze_filtrate': risultati_stanze, "stanze_prenotate": prenotazioni_filtrate,
-                               "id_prenotate": p})
+                               "id_prenotate": p, "prezzo_vacanza": prezzo_vacanza})
 
 
 
@@ -178,7 +195,7 @@ def search(request):
 
 
 # filtro da usare nel template per il calcolo del prezzo totale per il soggiorno
-# @register.filter(name='moltiplicazione')
+# @register.simple_tag()
 # def moltiplicazione(value, arg):
 #     print("value: "+" arg: ", value, arg)
 #     return value*arg

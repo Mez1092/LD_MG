@@ -1,6 +1,7 @@
 {% extends "base2.html" %}
 
 
+
 {% block header %}
     <head>
         {% load staticfiles %}
@@ -145,6 +146,13 @@
                                     <p>
                                         Prezzo stanza: {{ r.prezzo }}<br>
                                         Giorni alloggio: {{ data.2 }}<br>
+                                        {% for k,v in prezzo_vacanza.items %}
+                                            {% if r.id == k %}
+                                               Totale Soggiorno: {{ v }}<br>
+
+                                            {% endif %}
+
+                                        {% endfor %}
                                         <p><h4>Features:</h4>
                                         <ul style="list-style-type:none">
                                             <li>{% if r.aria_condizionata == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Aria Condizionata</li>
@@ -168,7 +176,16 @@
                                    <p class="wht-text">
                                        Prezzo stanza: {{ r.prezzo }}<br>
                                        Giorni alloggio: {{ data.2 }}<br>
-    {#                                   <b>Totale: {{ data.2|moltiplicazione:r.prezzo }}</b><br><hr>#}
+                                       {% for k,v in prezzo_vacanza.items %}
+                                            {% if r.id == k %}
+                                               Totale Soggiorno: {{ v }}<br>
+
+                                            {% endif %}
+
+                                       {% endfor %}
+
+{#                                        <b>Totale: {%  simple_tag "r.prezzo" "data.2" %}</b><br><hr>#}
+
                                        <p><h4 class="wht-text">Features:</h4>
                                            <ul style="list-style-type:none"class="wht-text">
                                            <li>{% if r.aria_condizionata == True %} <span class="glyphicon glyphicon-ok"></span> {% else %} <span class="glyphicon glyphicon-remove"> </span>{% endif %} Aria Condizionata</li>
