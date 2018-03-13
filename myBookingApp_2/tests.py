@@ -1,28 +1,23 @@
-from sqlite3 import IntegrityError
+from django.test import TestCase, Client
+from django.contrib.auth.models import  User, Group, Permission
 
-from django.core.checks import messages
-from django.shortcuts import get_object_or_404
-from django.test import TestCase
-from django.contrib.auth.models import  User, Group
-
-
-from myBookingApp_2.models import Stanza, Hotel
 
 class Tests(TestCase):
-    def creazione_utente(self):
-        user = User.objects.create_user(username='marco',
+    def setUp(self):
+        self.group = Group.objects.create(name = "Utente")
+        add_voto = Permission.objects.get(codename = 'add_voto')
+        self.group.permissions.add(add_voto)
+        self.user = User.objects.create_user(username='pippo',
         first_name='Filippo', last_name='Inzaghi',
         password='pippomio', email='pippo9@gmail.com')
-        group = Group.objects.get(name='Utente')
-        user.groups.add(group)
+        self.group.user_set.add(self.user)
+        self.c = Client()
 
 
-    def creazione_stanza(self):
-        try:
-            Stanza.objects.create(id_hotel=5, num_camera=4, prezzo=300,
-                                  prezzo_festivita=450,
-                                  num_persone=3, aria_condizionata=True,
-                                  camera_fumatori=False, animali=False)
-        except IntegrityError as e:
-            messages.info('Impossibile creare stanza! Stanza gia esistente per hotel selezionato')
+    def test_creazione_utente(self):
+        self.assertTrue(isinstance(self.user, User))
+        self.assertEqual(self.user.username, 'pippo')
 
+    def test_utente_login(self):
+        response_login = self.c.login(username = 'pippo', password = 'pippomio')
+        self.assertEqual(response_login.__bool__(), True)
