@@ -72,11 +72,11 @@ def search(request):
                 print(f_ordinamento)
                 # trasformo in stringa la data di checkin e checkout per calcolare il delta
                 date_format = "%Y-%m-%d"
-                # check_in_string = f_check_in.strftime(date_format)
-                # check_out_string = f_check_out.strftime(date_format)
+                check_in_string = f_check_in.strftime(date_format)
+                check_out_string = f_check_out.strftime(date_format)
                 delta = (f_check_out - f_check_in)
-                data.append(f_check_in)
-                data.append(f_check_out)
+                data.append(check_in_string)
+                data.append(check_out_string)
                 data.append(int(delta.days))
 
                 Filtered_hotels = Filtered_hotels.filter(citta__icontains=f_citta).all()
@@ -117,8 +117,8 @@ def search(request):
 
 
                 for stanza_prenotata in prenotazioni_totali:
-                    cin = stanza_prenotata.check_in
-                    cout = stanza_prenotata.check_out
+                    cin = stanza_prenotata.check_in.strftime(date_format)
+                    cout = stanza_prenotata.check_out.strftime(date_format)
 
                     if (data[0] >= cin and data[0] <= cout) or (data[1] >= cin and data[1] <= cout) or (
                             data[0] <= cin and data[1] >= cout):

@@ -1,22 +1,9 @@
-########################### CONFIGURAZIONE DATABASE MYSQL ###########################
+########################### CONFIGURAZIONE DATABASE SQLite3 ###########################
 
--------- ENTRO IN MYSQL --------
-$ mysql --user=root -p
-poi inserisci la password di root di MySQL
+Avendo utilizzato SQlite3 come DB non è stata necessaria la creazione di un database di appoggio in quanto l'intera basa di dati risiede in un unico file
+che si autogenera seguendo le specifiche inserite nel settings.py
 
--------- CREO IL DB --------
-create database BookingDB_2 character set utf8;
-
--------- CREO LO USER --------
-create user 'bookingUser_2'@'localhost' identified by 'password';
-
--------- RILASCIO I PRIVILEGI --------
-grant all privileges on BookingDB_2.* to 'bookingUser_2'@'localhost' with grant option;
-
--------- CARICO IL DATABASE --------
-mysql -u bookingUser_2 -p bookingDB_2 < BookingDB_2.sql
-
-########################### DJANGO ########################### 
+########################### DJANGO ###########################
 
 -------- Apro Terminale in PyCharm --------
 python manage.py makemigrations
@@ -28,9 +15,20 @@ python manage.py runserver
 
 ########################### CREDENTIALS ###########################
 
+UserAdmin: Admin
+PasswordAdmin: 123stella
 
+# Utenti #
+User: marco
+Password: 123stella
 
-User: Admin
+User: stefano
+Password: 123stella
+
+User: nunzio
+Password: 123stella
+
+User: josè
 Password: 123stella
 
 
