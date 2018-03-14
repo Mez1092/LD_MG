@@ -65,16 +65,6 @@ class Voto(models.Model):
 
 
 
-
-# class Stanzapreferita (models.Model):
-#     stanza_preferita = models.ForeignKey(Stanza)
-#     user_id = models.ForeignKey(User)
-#
-#     def __str__(self):
-#         return self.stanza_preferita.id_hotel.nome + "camera num: "+ str(self.stanza_preferita.num_camera)
-#
-
-
 class ListaAttesaStanza (models.Model):
     lista_attesa = models.ForeignKey(Stanza)
     user_id = models.ForeignKey(User)

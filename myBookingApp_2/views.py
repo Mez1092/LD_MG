@@ -12,9 +12,7 @@ from .forms import *
 from django.core.mail import send_mail
 from django.conf import settings
 import datetime
-# from django import template
-#
-# register = template.Library()
+
 
 def userpage(request):
 
@@ -174,33 +172,6 @@ def search(request):
 
 
 
-        # print(prenotazioni_filtrate)
-
-        # print("total id ", Filtered_rooms)
-
-        # tengo solo gli hotel filtrati che possiedono delle stanze:    DA RIVEDERE PER TROVARE QUALCOSA DI MEGLIO
-        # if total_id_hotel:
-        #     for h in Filtered_hotels:
-        #         count = 0
-        #         for e in total_id_hotel:
-        #             if h.id == e.id :
-        #                 count = count +1
-        #         if count == 0:
-        #             print(h.nome)
-        #             Filtered_hotels = Filtered_hotels.exclude(pk=h.pk)
-        # print("filtered hotel dopo ", Filtered_hotels)
-        #
-        #risultati_hotel = Filtered_hotels
-
-
-
-# filtro da usare nel template per il calcolo del prezzo totale per il soggiorno
-# @register.simple_tag()
-# def moltiplicazione(value, arg):
-#     print("value: "+" arg: ", value, arg)
-#     return value*arg
-
-
 #Eseguibile solo da chi possiede i permessi Direzione
 def creastanza(request):
     if request.user.groups.filter(name__in = ["Direzione"]).exists():
@@ -223,13 +194,7 @@ def creastanza(request):
                     return render(request, 'successocreazionestanza.html')
                 except IntegrityError as e:
                     messages.info(request, 'Impossibile creare stanza! Stanza gia esistente per hotel selezionato')
-            # Verifica custom se nuova stanza ha numero camera gia esistente
-            # for l in Hotel.objects.all():
-            #     if (l.id == int(f_id_hotel)):
-            #         stanze_id = Stanza.objects.filter(id_hotel=l.id)
-            #         for r in stanze_id:
-            #             if (r.num_camera == int(f_num_camera)):
-            #                 print("numero camera gia esistente")
+
         else:
             # se sono in una get faccio vedere il form vuoto
             form_crea_stanza = AddRoomForm(user=request.user)
@@ -281,12 +246,6 @@ def creahotel(request):
         return render(request, 'creahotel.html', {'form_aggiungi_hotel': form_crea_hotel})
     else:
         return render(request, 'accessonegato.html')
-
-
-
-# @login_required
-# def login_test(request):
-#     return HttpResponseRedirect('/myBookingApp_2/search/')
 
 
 def logout_view(request):
@@ -402,9 +361,6 @@ def RiepilogoPrenotazione(request):
         else:
             if request.user.groups.filter(name__in=["Utente"]).exists():
                 if request.method == "POST":
-                    # checkin = request.session['data_arrive']
-                    # checkout = request.session['data_leave']
-                    # new_idStanzaPrenotation = request.session['id']
                     print("sono autenticato e sono nella riepilogo")
                     id_hotel = request.POST['id_hotel']
                     id_camera = request.POST['id']
@@ -413,7 +369,6 @@ def RiepilogoPrenotazione(request):
                     hotel = Hotel.objects.all().filter(id =id_hotel)
                     print(id, data_arrive, data_leave)
                     return render(request, 'riepilogoprenotazione.html',{'id_camera': id_camera, 'check_in': data_arrive, 'check_out': data_leave,'nome_stanza': id_camera, 'nome_hotel': hotel})
-            # DO STUFF
                 else:
                     print("else")
             else:
@@ -435,22 +390,6 @@ def AggiungiPrenotazione(request):
 
 
 
-# def AggiungiAiPreferiti(request):
-#     preferite = Stanzapreferita.objects.all()
-#     room = Stanza.objects.all()
-#     new_idStanzaPreferita = int(request.POST['id'])
-#     new_userPreferita = request.user.id
-#
-#     preferite = preferite.filter(user_id = new_userPreferita)
-#     if new_idStanzaPreferita not in preferite:
-#             obj = Stanzapreferita.objects.get_or_create(stanza_preferita=get_object_or_404(Stanza,pk=new_idStanzaPreferita), user_id=get_object_or_404(User,pk=new_userPreferita))
-#             form_search_hotel = SearchHotelForm()
-#             return HttpResponseRedirect('/myBookingApp_2/search', {'form_search': form_search_hotel})
-#     else :
-#             form_search_hotel = SearchHotelForm()
-#             return HttpResponseRedirect('/myBookingApp_2/search', {'form_search': form_search_hotel})
-
-
 def AggiungiAWishlist(request):
     whishlist = ListaAttesaStanza.objects.all()
 
@@ -464,7 +403,7 @@ def AggiungiAWishlist(request):
     obj = ListaAttesaStanza.objects.get_or_create(lista_attesa=get_object_or_404(Stanza, pk=new_idStanzaWishlist), user_id = get_object_or_404(User, pk = new_userWishlist), check_in_lista_attesa = date_arrive, check_out_lista_attesa = date_leave)
     form_search_hotel = SearchHotelForm()
 
-    return HttpResponseRedirect('/myBookingApp_2/search', {'form_search': form_search_hotel})
+    return HttpResponseRedirect('/myBookingApp_2/', {'form_search': form_search_hotel})
 
 
 def CancellaPrenotazione(request):
@@ -474,7 +413,6 @@ def CancellaPrenotazione(request):
     for p in Prenotazioni.objects.all():
         if p.id == PrenotationDelete:
             stanzaPrenotata = p.id_stanza_id
-            # print("La stanza prenotata : ", stanzaPrenotata)
 
     wishListFiltered = ListaAttesaStanza.objects.filter(lista_attesa_id = stanzaPrenotata)
     prenotazioniFiltered = Prenotazioni.objects.all().filter(id_stanza_id = stanzaPrenotata)
@@ -571,10 +509,6 @@ def ModificaPrenotazione(request):
             id_stanza_modifica = p.id_stanza_id
 
 
-    # if request.method == 'GET':
-    #     print("Sono in GET")
-    #     form_editprenotazione = EditPrenotazione(initial={'check_in': data_checkin, 'check_out': data_checkout})
-    #     return render(request, "editprenotation.html", {'form_editprenotazione' : form_editprenotazione, 'prenotazione_modificata': PrenotationEdit})
     if request.method == 'POST':
         print("sono in POST")
         form_editprenotazione = EditPrenotazione(initial={'check_in': data_checkin, 'check_out': data_checkout})
@@ -602,16 +536,9 @@ def UpdateModificaPrenotazione(request):
 
         # Filtro le prenotazioni per stanza prenotata e escludo la prenotazione che voglio modificare
         prenotazioniListFiltered = Prenotazioni.objects.filter(id_stanza_id = prenotazione_stanza.id_stanza_id)
-        print("------------------------------------")
-        print(prenotazioniListFiltered)
-        print("------------------------------------")
 
         prenotazioniListFiltered = prenotazioniListFiltered.exclude(id = PrenotationEdit)
         print(prenotazioniListFiltered)
-
-        print("------------------------------------")
-
-
 
         # Raccolgo i dati dal form se valido
         if form_editprenotazione.is_valid():
@@ -699,11 +626,3 @@ def UpdateModificaPrenotazione(request):
         else:
             return HttpResponseRedirect('/myBookingApp_2/userpage')
 
-
-    # date_checkin = request.POST['check_in_day']
-    # data_checkin_month = request.POST['check_in_month']
-    # data_checkin_year = request.POST['check_in_year']
-
-    # print("Check In: ", date_checkin)
-
-    # return HttpResponseRedirect('/myBookingApp_2/userpage')

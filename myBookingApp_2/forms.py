@@ -5,7 +5,6 @@ import datetime
 
 
 class SearchHotelForm(forms.Form):
-    # citta = forms.CharField(widget=forms.TextInput(attrs=dict(required=False, id='testcitta')),required=False,)
     citta = forms.CharField(widget=forms.TextInput(), required=False)
     check_in = forms.DateField(widget=forms.widgets.SelectDateWidget, initial=datetime.date.today())
     check_out = forms.DateField(widget=forms.widgets.SelectDateWidget,initial=datetime.date.today() + datetime.timedelta(days=1))
@@ -31,12 +30,6 @@ class SearchHotelForm(forms.Form):
 class EditPrenotazione(forms.Form):
     check_in = forms.DateField(widget=forms.widgets.SelectDateWidget, initial=datetime.date.today())
     check_out = forms.DateField(widget=forms.widgets.SelectDateWidget,initial=datetime.date.today() + datetime.timedelta(days=1))
-
-    # def clean_check_out(self):
-    #     if 'check_out' in self.cleaned_data and 'check_in' in self.cleaned_data:
-    #         if self.cleaned_data['check_out'] < self.cleaned_data['check_in']:
-    #             raise forms.ValidationError("La data di checkout deve essere maggiore di quella di checkin")
-    #     return self.cleaned_data
 
 
 class AddRoomForm(forms.ModelForm):
@@ -73,17 +66,9 @@ class AddVoto(forms.ModelForm):
     user_vote = forms.IntegerField(widget=forms.Select(choices=[(User.username) for User in User.objects.all()]),required=True)
     voto_value = forms.FloatField()
 
-
-
-# class AddStanzaPreferita(forms.ModelForm):
-#     stanza_preferita = forms.IntegerField(widget=forms.Select(choices=[(stanza.num_camera) for stanza in Stanza.objects.all()]),required=True)
-#     user_id = forms.IntegerField(widget=forms.Select(choices=[(User.username) for User in User.objects.all()]),required=True)
-
-
 class AddToListaAttesa(forms.ModelForm):
     lista_attesa = forms.IntegerField(widget=forms.Select(choices=[(stanza.num_camera) for stanza in Stanza.objects.all()]),required=True)
     user_id = forms.IntegerField(widget=forms.Select(choices=[(User.username) for User in User.objects.all()]),required=True)
-    # user_prenotazione = forms.IntegerField(widget=forms.Select(choices=[(prenotazioni.id_user) for prenotazioni in Prenotazioni.objects.all()]),required=True)
     check_in = forms.DateField(widget=forms.widgets.SelectDateWidget, initial=datetime.date.today())
     check_out = forms.DateField(widget=forms.widgets.SelectDateWidget, initial=datetime.date.today() + datetime.timedelta(days=1))
 
@@ -113,7 +98,7 @@ class RegistrationForm(forms.Form):
 
 class LoginForm(forms.Form):
     Username = forms.CharField(max_length=30, required=True)
-    Password = forms.CharField(max_length=30, required=True)
+    Password = forms.CharField(widget=forms.PasswordInput(attrs = dict(max_length=30, required=True)))
 
     class Meta:
         model = User

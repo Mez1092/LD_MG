@@ -73,7 +73,7 @@
                                                 <input type="Submit" name="SubmitVote" value="Vote" id="mySubmitVote"><br><br>
                                                 <input type="hidden" name="HotelID" value={{ p.id_stanza.id_hotel_id }}>
                                             </form>
-                            {% endif%}
+                                {% endif%}
 
                                     <form action="/myBookingApp_2/cancellaprenotazione/" method="post">
                                         {% csrf_token %}
@@ -126,8 +126,6 @@
                                             {% csrf_token %}
 
                                                 <input type="hidden" name="IdWishlist" value={{p.id}}>
-    {#                                            <input type="hidden" name="data_checkin" value={{p.check_in}}>#}
-    {#                                            <input type="hidden" name="data_checkout" value={{p.check_out}}>#}
 
                                                 <input type="Submit" name="CancellaWishlist" value="Cancella Wishlist">
 

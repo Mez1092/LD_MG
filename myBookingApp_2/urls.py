@@ -5,10 +5,8 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.search,name= 'search'),
-    # url(r'^search/', views.search,name= 'search'),
     url(r'^creastanza/', views.creastanza,name= 'creastanza'),
     url(r'^creahotel/', views.creahotel,name= 'creahotel'),
-    # url(r'^creazioneavvenuta/', views.successocreazione, name='creazioneavvenuta'),
     url(r'^logout/$', views.logout_view, name='logout'),
     url(r'^login/',views.login_test,name='login'),
     url(r'^login_2/',views.login_2,name='login_2'),
